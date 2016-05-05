@@ -10,6 +10,7 @@ public class TerrainBlock : MonoBehaviour {
 	private float blockSize;
 	private Vector3 blockPosition;
 	private bool isVisible = true;
+	private Material mat;
 
 	public TerrainBlock(Vector3 pos, float size) {
 		blockPosition = pos;
@@ -19,11 +20,14 @@ public class TerrainBlock : MonoBehaviour {
 		block.transform.localScale = new Vector3(blockX * size, blockY * size, blockZ * size);
 		block.transform.position = pos;
 
-		Material mat = new Material (Shader.Find("Standard"));
-		mat.color = new Color (0, Random.value, 0);
+		mat = new Material (Shader.Find("Standard"));
+		mat.color = new Color (0.5F, 0.5F, 0.5F);
 
-		//block.AddComponent<MeshRenderer>();
 		block.GetComponent<Renderer> ().material = mat;
+	}
+
+	void setColor(Color color) {
+		mat.color = color;
 	}
 
 	void setActive(bool set) {

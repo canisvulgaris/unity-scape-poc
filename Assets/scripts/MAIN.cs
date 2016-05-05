@@ -4,9 +4,24 @@ using System.Collections;
 
 public class MAIN : MonoBehaviour {
 
+	public int _gridExponential = 5;
+	public float _terrainRoughness = 0.08F;
+	public float _blockSize = 0.1F;
+
+	private int _arrayIndex;
+	private int _arrayLength;
+	private Vector3[,] _positionArray;
+	private TerrainBlock[,] _blockArray;
+
 	// Use this for initialization
 	void Start () {
-		createTerrain ();
+		_arrayIndex = (int)Mathf.Pow (2, _gridExponential);
+		_arrayLength = _arrayIndex + 1;
+
+		_positionArray = new Vector3[_arrayLength, _arrayLength];
+		_blockArray = new TerrainBlock[_arrayLength, _arrayLength];
+
+		createDiamondTerrain ();
 	}
 	
 	// Update is called once per frame
@@ -14,17 +29,79 @@ public class MAIN : MonoBehaviour {
 	
 	}
 
-	void createTerrain() {
-		//TerrainBlock block = new TerrainBlock (new Vector3(0, 0, 0), 0.1F);
+	void updateTerrain(Vector3[,] posArray) {
+		int length = _arrayLength;
 
-		float blockSize = 0.1F;
-		int gridSize = 5;
-
-		for (float iterX = 0.0F; iterX < gridSize; iterX += blockSize) {
-			for (float iterZ = 0.0F; iterZ < gridSize; iterZ += blockSize) {
-				Vector3 pos = new Vector3 (iterX, 0.0F, iterZ);
-				TerrainBlock block = new TerrainBlock (pos, blockSize);
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
+				Debug.Log ("updateTerrain() i: " + i + " j: " + j + " length: " + length );
+				Vector3 pos = posArray[i, j];
+				TerrainBlock block = new TerrainBlock (pos * _blockSize, _blockSize);
 			}
 		}
 	}
+
+	void createDiamondTerrain() {
+		
+		int size = _arrayIndex;
+		int length = _arrayLength;
+		float roughness = _terrainRoughness;
+
+		//set default corners
+		_positionArray [0, 0] = Vector3.zero;
+		_positionArray [size, 0] = new Vector3 (size, 0.0f, 0.0f);
+		_positionArray [0, size] = new Vector3 (0.0f, 0.0f, size);
+		_positionArray [size, size] = new Vector3 (size, 0.0f, size);
+
+		split (size, roughness, length);
+
+		updateTerrain (_positionArray);
+	}
+
+	void split(int size, float roughness, int full) {
+		//Debug.Log ("split() params size: " + size + " roughness: " + roughness + " full: " + full	);
+		int half = size / 2;
+		float scale = roughness * size;
+
+		if (half < 1) {
+			return;
+		}
+
+		for (int y = half; y < full; y += size) {
+			for (int x = half; x < full; x += size) {
+				square (x, y, half, Random.value * scale * 2 - scale, full);
+			}
+		}
+
+		for (int y = 0; y < full; y += half) {
+			for (int x = (y + half) % size; x < full; x += size) {
+				diamond (x, y, half, Random.value * scale * 2 - scale, full);
+			}
+		}
+
+		split (half, roughness, full);
+	}
+
+	void diamond(int x, int y, int half, float offset, int full) {
+		//Debug.Log ("diamond() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);	
+		float d1 = (y - half) >= 0 ? _positionArray [x, (y - half)].y : 0;
+		float d2 = (x + half) < full ? _positionArray [(x + half), y].y : 0;
+		float d3 = (y + half) < full ? _positionArray [x, (y + half)].y : 0;
+		float d4 = ((x - half) >= 0) ? _positionArray [(x - half), y].y : 0;
+
+		float average = ( d1 + d2 + d3 + d4 ) / 4;
+		_positionArray [x, y] = new Vector3 (x, average + offset, y);
+	}
+
+	void square(int x, int y, int half, float offset, int full) {
+		//Debug.Log ("square() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);
+		float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray [(x - half), (y - half)].y : 0;
+		float s2 = ((y - half) >= 0 || (x + half) < full) ? _positionArray [(x + half), (y - half)].y : 0;
+		float s3 = ((x + half) < full || (y + half) < full) ? _positionArray [(x + half), (y + half)].y : 0;
+		float s4 = ((x - half) >= 0 || (y + half) < full) ? _positionArray [(x - half), (y + half)].y : 0;
+
+		float average = ( s1 + s2 + s3 + s4 ) / 4;
+		_positionArray [x, y] = new Vector3 (x, average + offset, y);
+	}
+
 }
