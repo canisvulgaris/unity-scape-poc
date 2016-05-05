@@ -23,7 +23,6 @@ public class Main : MonoBehaviour {
 		_positionArray = new Vector3[_arrayLength, _arrayLength];
 		_blockArray = new TerrainBlock[_arrayLength, _arrayLength];
 
-		createFlatTerrain ();
 		createDiamondTerrain ();
 	}
 	
@@ -38,6 +37,18 @@ public class Main : MonoBehaviour {
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
 				Vector3 pos = new Vector3(i, 0, j);
+				TerrainBlock block = new TerrainBlock (pos * _blockSize, _blockSize);
+				_blockArray [i, j] = block;
+			}
+		}
+	}
+
+	void createTerrain(Vector3[,] posArray) {
+		int length = _arrayLength;
+
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
+				Vector3 pos = posArray [i, j];
 				TerrainBlock block = new TerrainBlock (pos * _blockSize, _blockSize);
 				_blockArray [i, j] = block;
 			}
@@ -87,11 +98,13 @@ public class Main : MonoBehaviour {
 		split (size, roughness, length);
 
 		//updateTerrain (_positionArray);
+		createTerrain (_positionArray);
 	}
 
 	void split(int size, float roughness, int full) {
 		//Debug.Log ("split() params size: " + size + " roughness: " + roughness + " full: " + full	);
 		int half = size / 2;
+		//float scale = roughness * _blockSize;
 		float scale = roughness * size;
 
 		if (half < 1) {
@@ -122,7 +135,7 @@ public class Main : MonoBehaviour {
 
 		float average = ( d1 + d2 + d3 + d4 ) / 4;
 		_positionArray [x, y] = new Vector3 (x, average + offset, y);
-		StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
+		//StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
 	}
 
 	void square(int x, int y, int half, float offset, int full) {
@@ -134,7 +147,7 @@ public class Main : MonoBehaviour {
 
 		float average = ( s1 + s2 + s3 + s4 ) / 4;
 		_positionArray [x, y] = new Vector3 (x, average + offset, y);
-		StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
+		//StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
 	}
 
 }

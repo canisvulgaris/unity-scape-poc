@@ -20,7 +20,7 @@ public class TerrainBlock : MonoBehaviour {
 		block.transform.position = pos;
 
 		mat = new Material (Shader.Find("Standard"));
-		mat.color = new Color (0.5F, 0.5F, 0.5F);
+		mat.color = new Color(0, 0.5F + (Random.value/2), 0);
 
 		block.GetComponent<Renderer> ().material = mat;
 	}
