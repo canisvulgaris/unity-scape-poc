@@ -9,7 +9,6 @@ public class TerrainBlock : MonoBehaviour {
 	private float blockZ = 1;
 	private float blockSize;
 	private Vector3 blockPosition;
-	private bool isVisible = true;
 	private Material mat;
 
 	public TerrainBlock(Vector3 pos, float size) {
@@ -26,20 +25,17 @@ public class TerrainBlock : MonoBehaviour {
 		block.GetComponent<Renderer> ().material = mat;
 	}
 
-	void setColor(Color color) {
+	public void setColor(Color color) {
 		mat.color = color;
 	}
 
-	void setActive(bool set) {
+	public void setEnabled(bool set) {
 		block.SetActive (set);
 	}
 
 	public bool IsVisible {
 		get {
-			return isVisible;
-		}
-		set {
-			isVisible = value;
+			return block.activeSelf;
 		}
 	}
 
