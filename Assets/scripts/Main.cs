@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-public class MAIN : MonoBehaviour {
+public class Main : MonoBehaviour {
 
 	public int _gridExponential = 10;
 	public float _terrainRoughness = 0.08F;
@@ -122,7 +122,7 @@ public class MAIN : MonoBehaviour {
 
 		float average = ( d1 + d2 + d3 + d4 ) / 4;
 		_positionArray [x, y] = new Vector3 (x, average + offset, y);
-		StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.005F));
+		StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
 	}
 
 	void square(int x, int y, int half, float offset, int full) {
@@ -134,7 +134,7 @@ public class MAIN : MonoBehaviour {
 
 		float average = ( s1 + s2 + s3 + s4 ) / 4;
 		_positionArray [x, y] = new Vector3 (x, average + offset, y);
-		StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.005F));
+		StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
 	}
 
 }
