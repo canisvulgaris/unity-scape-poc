@@ -14,10 +14,12 @@ public class Main : MonoBehaviour {
 	private Vector3[,] _positionArray;
 	private TerrainObject[,] _objArray;
 
-	private float count = 0;
+	//private float _count = 0;
 
-	// Use this for initialization
-	void Start () {
+    private System.DateTime _startTime = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
+
+    // Use this for initialization
+    void Start () {
 
         if (_objType == null)
         {
@@ -31,10 +33,16 @@ public class Main : MonoBehaviour {
 		_objArray = new TerrainObject[_arrayLength, _arrayLength];
 
 		createDiamondTerrain ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        Debug.Log("terrain creation complete. " + (System.DateTime.UtcNow - _startTime).Seconds);
+
+        //updateObjectTerrain (_positionArray);
+        //createObjectTerrain (_positionArray);
+
+
+    }
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
 
@@ -50,7 +58,7 @@ public class Main : MonoBehaviour {
 		}
 	}
 
-	void createTerrain(Vector3[,] posArray) {
+	void createObjectTerrain(Vector3[,] posArray) {
 		int length = _arrayLength;
 
 		for (int i = 0; i < length; i++) {
@@ -62,7 +70,7 @@ public class Main : MonoBehaviour {
 		}
 	}
 
-	void updateTerrain(Vector3[,] posArray) {
+	void updateObjectTerrain(Vector3[,] posArray) {
 		int length = _arrayLength;
 
 		for (int i = 0; i < length; i++) {
@@ -103,9 +111,6 @@ public class Main : MonoBehaviour {
 		_positionArray [size, size] = new Vector3 (size, 0.0f, size);
 
 		split (size, roughness, length);
-
-		//updateTerrain (_positionArray);
-		createTerrain (_positionArray);
 	}
 
 	void split(int size, float roughness, int full) {
@@ -142,10 +147,10 @@ public class Main : MonoBehaviour {
 
 		float average = ( d1 + d2 + d3 + d4 ) / 4;
 		_positionArray [x, y] = new Vector3 (x, average + offset, y);
-		//StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
-	}
+        //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
+    }
 
-	void square(int x, int y, int half, float offset, int full) {
+    void square(int x, int y, int half, float offset, int full) {
 		//Debug.Log ("square() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);
 		float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray [(x - half), (y - half)].y : 0;
 		float s2 = ((y - half) >= 0 || (x + half) < full) ? _positionArray [(x + half), (y - half)].y : 0;
@@ -154,6 +159,6 @@ public class Main : MonoBehaviour {
 
 		float average = ( s1 + s2 + s3 + s4 ) / 4;
 		_positionArray [x, y] = new Vector3 (x, average + offset, y);
-		//StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
-	}
+        //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
+    }
 }
