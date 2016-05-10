@@ -4,24 +4,31 @@ using System.Collections;
 
 public class Main : MonoBehaviour {
 
-	public int _gridExponential = 10;
+    public GameObject _objType;
+    public int _gridExponential = 10;
 	public float _terrainRoughness = 0.08F;
-	public float _blockSize = 1;
+	public float _objSize = 1;
 
 	private int _arrayIndex;
 	private int _arrayLength;
 	private Vector3[,] _positionArray;
-	private TerrainBlock[,] _blockArray;
+	private TerrainObject[,] _objArray;
 
 	private float count = 0;
 
 	// Use this for initialization
 	void Start () {
+
+        if (_objType == null)
+        {
+            Debug.LogError("Main - _objType not set");
+        }
+
 		_arrayIndex = (int)Mathf.Pow (2, _gridExponential);
 		_arrayLength = _arrayIndex + 1;
 
 		_positionArray = new Vector3[_arrayLength, _arrayLength];
-		_blockArray = new TerrainBlock[_arrayLength, _arrayLength];
+		_objArray = new TerrainObject[_arrayLength, _arrayLength];
 
 		createDiamondTerrain ();
 	}
@@ -37,8 +44,8 @@ public class Main : MonoBehaviour {
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
 				Vector3 pos = new Vector3(i, 0, j);
-				TerrainBlock block = new TerrainBlock (pos * _blockSize, _blockSize);
-				_blockArray [i, j] = block;
+                TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize);
+                _objArray[i, j] = obj;
 			}
 		}
 	}
@@ -49,9 +56,9 @@ public class Main : MonoBehaviour {
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
 				Vector3 pos = posArray [i, j];
-				TerrainBlock block = new TerrainBlock (pos * _blockSize, _blockSize);
-				_blockArray [i, j] = block;
-			}
+                TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize);
+                _objArray[i, j] = obj;
+            }
 		}
 	}
 
@@ -61,13 +68,13 @@ public class Main : MonoBehaviour {
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
 				Vector3 pos = posArray[i, j];
-				_blockArray[i, j].BlockPosition = pos * _blockSize;
+                _objArray[i, j].ObjectPosition = pos * _objSize;
 			}
 		}
 	}
 
 	void updateBlockPosition(int i, int j, Vector3 pos) {
-		_blockArray[i, j].BlockPosition = pos * _blockSize;	
+        _objArray[i, j].ObjectPosition = pos * _objSize;	
 	}
 
 //	IEnumerator flashBlock(TerrainBlock block, float sec) {
@@ -80,7 +87,7 @@ public class Main : MonoBehaviour {
 	IEnumerator moveBlock(int i, int j, Vector3 pos, float sec) {
 		yield return new WaitForSeconds (sec);
 		updateBlockPosition (i, j, pos);
-		_blockArray[i, j].setColor (new Color(0, 0.75F + (Random.value/4), 0));
+        _objArray[i, j].setColor (new Color(0, 0.75F + (Random.value/4), 0));
 	}
 
 	void createDiamondTerrain() {
@@ -149,5 +156,4 @@ public class Main : MonoBehaviour {
 		_positionArray [x, y] = new Vector3 (x, average + offset, y);
 		//StartCoroutine(moveBlock (x, y, _positionArray [x, y], count+=0.001F));
 	}
-
 }
