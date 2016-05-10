@@ -30,23 +30,98 @@ public class Main : MonoBehaviour {
 		_arrayLength = _arrayIndex + 1;
 
 		_positionArray = new Vector3[_arrayLength, _arrayLength];
-		_objArray = new TerrainObject[_arrayLength, _arrayLength];
+		
+
+        //for (int x = 0; x < _arrayLength; x++)
+        //{
+        //    for (int y = 0; y < _arrayLength; y++)
+        //    {
+        //        _positionArray[x, y] = new Vector3(x, y, 0);
+        //    }
+        //}
 
 		createDiamondTerrain ();
-        Debug.Log("terrain creation complete. " + (System.DateTime.UtcNow - _startTime).Seconds);
+        Debug.Log("diamond complete. " + (System.DateTime.UtcNow - _startTime).Seconds);
 
+        //_objArray = new TerrainObject[_arrayLength, _arrayLength];
         //updateObjectTerrain (_positionArray);
         //createObjectTerrain (_positionArray);
-
-
+        createMeshTerrain(_positionArray);
+        Debug.Log("mesh complete. " + (System.DateTime.UtcNow - _startTime).Seconds);
     }
 
     // Update is called once per frame
-    void Update () {
-	
-	}
+    //void Update () {	
+	//}
 
-	void createFlatTerrain() {
+
+    void createMeshTerrain(Vector3[,] posArray) {
+
+        int length = _arrayLength;
+
+        Vector3[] newVertices = new Vector3[ length * length ];
+        Vector2[] newUV = new Vector2[ length * length ];
+        int[] newTriangles = new int[ (3 * 2 * (length - 1) * (length - 1))];
+
+        Mesh mesh = new Mesh();
+        _objType.GetComponent<MeshFilter>().mesh = mesh;
+
+        //set vertices
+        int k = 0;
+        for (int i = 0; i < length; i++)
+        {
+            for (int j = 0; j < length; j++)
+            {
+                newVertices[k] = _positionArray[i, j];
+                //Debug.Log("newVertices : k : " + k + " - " + newVertices[k]);
+                k++;
+            }
+        }
+
+        //set uv
+        int m = 0;
+        for (int n = 0; n < length; n++)
+        {
+            for (int o = 0; o < length; o++)
+            {
+                newUV[m] = new Vector2(n, o);
+                m++;
+            }
+        }
+
+        int z = 0;
+        for (int x = 0; x < length - 1; x++)
+        {
+            for (int y = 0; y < length - 1; y++)
+            {
+                newTriangles[z] =     (x     * length) + y;
+                newTriangles[z + 1] = ((x+1) * length) + y;
+                newTriangles[z + 2] = (x     * length) + y + 1;
+
+                newTriangles[z + 3] = ((x+1) * length) + y;
+                newTriangles[z + 4] = ((x+1) * length) + y + 1;
+                newTriangles[z + 5] = (x     * length) + y + 1;
+
+
+                //Debug.Log("count: z : " + z);
+                //Debug.Log("tri: " + newTriangles[z] + ", " + newTriangles[z + 1] + ", " + newTriangles[z + 2] + " -  " + newTriangles[z + 3] + ", " + newTriangles[z + 4] + ", " + newTriangles[z + 5]);
+                //Debug.Log("vert: " + newVertices[newTriangles[z]] + ", " + newVertices[newTriangles[z + 1]] + ", " + newVertices[newTriangles[z + 2]] + " -  " + newVertices[newTriangles[z + 3]] + ", " + newVertices[newTriangles[z + 4]] + ", " + newVertices[newTriangles[z + 5]]);
+
+                z += 6;
+            }
+        }
+
+        mesh.vertices = newVertices;
+        mesh.uv = newUV;
+        mesh.triangles = newTriangles;
+
+        mesh.RecalculateNormals();
+        //mesh.Optimize();
+
+        Instantiate(_objType, Vector3.zero, Quaternion.Euler(0, 0, 180));
+    }
+    
+	void createFlatObjectTerrain() {
 		int length = _arrayLength;
 
 		for (int i = 0; i < length; i++) {
