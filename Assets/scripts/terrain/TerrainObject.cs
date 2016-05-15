@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TerrainObject : MonoBehaviour {
+public class TerrainObject {
 
 	private GameObject objRef;
-    private GameObject objType;
 	private float objX = 1;
 	private float objY = 1;
 	private float objZ = 1;
@@ -12,13 +11,13 @@ public class TerrainObject : MonoBehaviour {
 	private Vector3 objPosition;
 	private Material objMat;
 
-	public TerrainObject(GameObject type, Vector3 pos, float size) {
+	public TerrainObject(GameObject type, Vector3 pos, float size, GameObject parent) {
 		objPosition = pos;
 		objSize = size;
-        objType = type;
 
-        objRef = Instantiate(type, pos, type.transform.rotation) as GameObject;
+        objRef = GameObject.Instantiate(type, pos, type.transform.rotation) as GameObject;        
         objRef.transform.localScale = new Vector3(objX * size, objY * size, objZ * size);
+        objRef.transform.parent = parent.transform;
 
         objMat = new Material (Shader.Find("Standard"));
         objMat.color = new Color(0, 0.5F + (Random.value/2), 0);

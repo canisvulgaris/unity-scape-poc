@@ -2,9 +2,14 @@
 using System.Collections;
 
 
-public class Main : MonoBehaviour {
+public class TerrainController : MonoBehaviour {
 
-    public GameObject _objType;
+    public GameObject[] _objectsAvailable;
+    public int _objSelection;
+    private GameObject _objType;
+    public GameObject _terrainParent;
+
+
     public int _gridExponential = 10;
 	public float _terrainRoughness = 0.08F;
 	public float _objSize = 1;
@@ -13,8 +18,9 @@ public class Main : MonoBehaviour {
 	private int _arrayLength;
 	private Vector3[,] _positionArray;
 	private TerrainObject[,] _objArray;
+    private GameObject _objRef;
 
-    private System.DateTime _startTime = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
+    //private System.DateTime _startTime = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
     //private float _count = 0;
 
     /*************************************************************** 
@@ -22,27 +28,73 @@ public class Main : MonoBehaviour {
      * 
      ***************************************************************/
     void Start () {
+        //init
+        RefreshTerrain();
+    }
+
+    public void RefreshTerrain()
+    {
+        //Debug.Log("called RefreshTerrain");
+        _objType = _objectsAvailable[_objSelection];
 
         if (_objType == null)
         {
-            Debug.LogError("Main - _objType not set");
+            Debug.LogError("TerrainController - _objType not set");
+        }
+        if (_terrainParent == null)
+        {
+            Debug.LogError("TerrainController - _terrainParent not set");
         }
 
-		_arrayIndex = (int)Mathf.Pow (2, _gridExponential);
-		_arrayLength = _arrayIndex + 1;
-
-		_positionArray = new Vector3[_arrayLength, _arrayLength];
-
-        //set up the _positionArray height map using the Diamond-Square algorithm 
-		updatePositionUsingDiamondSquare ();
-        createMeshTerrain(_positionArray);
-
-        //_objArray = new TerrainObject[_arrayLength, _arrayLength];
-        //updateObjectTerrain (_positionArray);
-        //createObjectTerrain (_positionArray);
-
+        ClearTerrain();
+        BuildTerrain();
     }
 
+    public void ClearTerrain()
+    {
+        //Debug.Log("called ClearTerrain");
+        for (var i = 0; i < _terrainParent.transform.childCount; i++)
+        {
+            Destroy(_terrainParent.transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void BuildTerrain()
+    {
+        //Debug.Log("called BuildTerrain");
+        //set up initial params
+        _arrayIndex = (int)Mathf.Pow(2, _gridExponential);
+        _arrayLength = _arrayIndex + 1;
+        _positionArray = new Vector3[_arrayLength, _arrayLength];
+
+        CalcTerrainHeightMap();
+
+        if (_objType.name == "mesh")
+        {
+            //Debug.Log("found mesh object");
+            //set up the _positionArray height map using the Diamond-Square algorithm             
+            createMeshTerrain(_positionArray);
+        }
+        else
+        {
+            //Debug.Log("found terrain object");
+            _objArray = new TerrainObject[_arrayLength, _arrayLength];
+            createPositionalTerrainUsingObject(_positionArray);
+        }
+    }
+
+    public void CalcTerrainHeightMap()
+    {
+        //Debug.Log("called CalcTerrainHeightMap");
+
+        if (_positionArray == null || _arrayLength == null || _arrayIndex == null)
+        {
+            Debug.LogError("TerrainController - CalcTerrainHeightMap - params not set");
+        }
+
+        //create random terrain positions
+        updatePositionUsingDiamondSquare();
+    }
 
     /***************************************************************
      * creates a new mesh for the object (does not use terrainobject)
@@ -111,7 +163,10 @@ public class Main : MonoBehaviour {
 
         //instantiate object with newly added mesh
         _objType.AddComponent<MeshCollider>();
-        Instantiate(_objType, Vector3.zero, Quaternion.Euler(0, 0, 180));
+        _objRef = Instantiate(_objType, Vector3.zero, Quaternion.Euler(0, 0, 180)) as GameObject;
+        _objRef.transform.parent = _terrainParent.transform;
+
+
     }
 
     /***************************************************************
@@ -124,7 +179,7 @@ public class Main : MonoBehaviour {
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
 				Vector3 pos = new Vector3(i, 0, j);
-                TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize);
+                TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize, _terrainParent);
                 _objArray[i, j] = obj;
 			}
 		}
@@ -140,7 +195,7 @@ public class Main : MonoBehaviour {
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
 				Vector3 pos = posArray [i, j];
-                TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize);
+                TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize, _terrainParent);
                 _objArray[i, j] = obj;
             }
 		}
