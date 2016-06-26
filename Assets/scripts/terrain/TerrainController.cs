@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 
 public class TerrainController : MonoBehaviour {
 
@@ -16,12 +16,13 @@ public class TerrainController : MonoBehaviour {
 	public float _terrainRoughness = 0.08F;
 	public float _objSize = 1;
     public int _meshLimit = 16;
+    public int _normalSmoothAngle = 60;
 
     private int _arrayIndex;
 	private int _arrayLength;
 	private Vector3[,] _positionArray;
 	private TerrainObject[,] _objArray;
-    private GameObject _objRef;
+    private List<GameObject> _objRef = new List<GameObject>();
 
     //private System.DateTime _startTime = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
     //private float _count = 0;
@@ -78,6 +79,7 @@ public class TerrainController : MonoBehaviour {
             //Debug.Log("found mesh object");
             //set up the _positionArray height map using the Diamond-Square algorithm             
             createMeshTerrain(_positionArray, _meshLimit);
+            normalizeAllEdgeVertices();
         }
         else
         {
@@ -127,7 +129,7 @@ public class TerrainController : MonoBehaviour {
 
         //create random terrain positions
         updatePositionUsingDiamondSquare();
-        //normalizeEdges();
+        //normalizeBoundaries();
     }
 
     /***************************************************************
@@ -152,11 +154,9 @@ public class TerrainController : MonoBehaviour {
             for (int y = 0; y < _arrayIndex; y += meshLimit)
             {
                 //Debug.Log("generateMesh - meshLimit: " + meshLimit + " -_objSize: " + _objSize + " - x: " + x + " - y: " + y);
-                generateMesh(meshLimit, _objSize, x, y);
+                generateMesh(meshLimit + 1, _objSize, x, y);
             }
         }
-        
-
     }
 
     /***************************************************************
@@ -215,24 +215,31 @@ public class TerrainController : MonoBehaviour {
             }
         }
 
-        //calculate normals
-        //Debug.Log(mesh.normals);
+        //Debug.Log("about to calc normals");
+
         mesh.name = "terrain-" + length + "-"+ startx + "-" + starty;
         mesh.Clear();
         mesh.vertices = meshVertices;
         mesh.uv = meshUV;
         mesh.triangles = meshTriangles;
 
-        mesh.RecalculateNormals();
+        //mesh.RecalculateNormals();
+        mesh.RecalculateNormals(_normalSmoothAngle);
         mesh.RecalculateBounds();
         mesh.Optimize();
 
         //instantiate object with newly added mesh       
-        GameObject newMesh = Instantiate(_objType, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 180)) as GameObject;
-        newMesh.GetComponent<MeshFilter>().mesh = mesh;
-        newMesh.AddComponent<MeshCollider>();
-        newMesh.transform.localScale = new Vector3(size, size, size);
-        newMesh.transform.parent = _terrainParent.transform;
+        GameObject newMeshObj = Instantiate(_objType, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 180)) as GameObject;
+        newMeshObj.GetComponent<MeshFilter>().mesh = mesh;
+        newMeshObj.AddComponent<MeshCollider>();
+        newMeshObj.transform.localScale = new Vector3(size, size, size);
+        newMeshObj.transform.parent = _terrainParent.transform;
+
+        //add to object ref array
+        _objRef.Add(newMeshObj);
+
+        //display normals
+        //drawVertexNormals(newMeshObj);
 
         //GameObject objN = Instantiate(_objRef, new Vector3(0, 0, _arrayIndex * _objSize), Quaternion.Euler(0, 0, 180)) as GameObject;
         //objN.transform.parent = _terrainParent.transform;
@@ -307,7 +314,7 @@ public class TerrainController : MonoBehaviour {
     * update the edge points to match each other so they can map infinitely
     * 
     ****************************************************************/
-    void normalizeEdges()
+    void normalizeBoundaries()
     {
         for (int i = 1; i < _arrayLength-1; i++)
         {
@@ -321,6 +328,43 @@ public class TerrainController : MonoBehaviour {
             _positionArray[0, i].y = avgY;
             _positionArray[_arrayLength - 1, i].y = avgY;
         }
+    }
+
+    /***************************************************************
+    * update the vertice normals to fix lighting issues
+    * 
+    ****************************************************************/
+    void normalizeAllEdgeVertices()
+    {
+        for(int j = 0; j < _objRef.Count; j++)
+        {
+            Mesh mesh = _objRef[j].GetComponent<MeshFilter>().mesh;
+            Vector3[] normals = mesh.normals;
+                                    
+            for (int i = 0; i < mesh.vertexCount; i++)
+            {
+                Debug.DrawLine(mesh.vertices[i], mesh.vertices[i] + normals[i] * 2, Color.red, 10.0f);
+            }
+        }
+    }
+
+    /***************************************************************
+    * draw debug lines for vertex normals
+    * 
+    ****************************************************************/
+    void drawVertexNormals(GameObject meshObj)
+    {
+
+        Mesh mesh = meshObj.GetComponent<MeshFilter>().mesh;
+        Color color = new Color(Random.value, Random.value, Random.value);
+
+        for (int i = 0; i < mesh.vertexCount; i++)
+        {
+            Vector3 fixedVertex = Quaternion.Euler(0, 0, 180) * mesh.vertices[i];
+            Vector3 fixedNormal = Quaternion.Euler(0, 0, 180) * mesh.normals[i];
+            Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, color, 120.0f);
+        }
+
     }
 
     /***************************************************************
