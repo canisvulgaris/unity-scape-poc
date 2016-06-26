@@ -8,6 +8,7 @@ public class TerrainController : MonoBehaviour {
     public int _objSelection;
     private GameObject _objType;
     public GameObject _terrainParent;
+    public GameObject _borderBlock;
 
 
     public int _gridExponential = 10;
@@ -68,6 +69,7 @@ public class TerrainController : MonoBehaviour {
         _positionArray = new Vector3[_arrayLength, _arrayLength];
 
         CalcTerrainHeightMap();
+        AddBorder();
 
         if (_objType.name == "mesh")
         {
@@ -83,17 +85,41 @@ public class TerrainController : MonoBehaviour {
         }
     }
 
+    /***************************************************************
+    * creates a border around the terrain
+    * 
+   ***************************************************************/
+    void AddBorder()
+    {
+        float borderHeight = 64;
+        float borderWidth = 2;
+
+        GameObject borderN = Instantiate(_borderBlock, new Vector3(-_arrayIndex, 0, _arrayIndex/2), Quaternion.identity) as GameObject;
+        borderN.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
+
+        GameObject borderE = Instantiate(_borderBlock, new Vector3(-_arrayIndex / 2, 0, _arrayIndex), Quaternion.identity) as GameObject;
+        borderE.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
+
+        GameObject borderS = Instantiate(_borderBlock, new Vector3(0, 0, _arrayIndex / 2), Quaternion.identity) as GameObject;
+        borderS.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
+
+        GameObject borderW = Instantiate(_borderBlock, new Vector3(-_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
+        borderW.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
+
+    }
+
     public void CalcTerrainHeightMap()
     {
         //Debug.Log("called CalcTerrainHeightMap");
 
-        if (_positionArray == null || _arrayLength == null || _arrayIndex == null)
+        if (_positionArray == null || _arrayLength == 0 || _arrayIndex == 0)
         {
             Debug.LogError("TerrainController - CalcTerrainHeightMap - params not set");
         }
 
         //create random terrain positions
         updatePositionUsingDiamondSquare();
+        //normalizeEdges();
     }
 
     /***************************************************************
@@ -153,11 +179,15 @@ public class TerrainController : MonoBehaviour {
             }
         }
 
+        //calculate normals
+        //Debug.Log(mesh.normals);
+
         mesh.vertices = meshVertices;
         mesh.uv = meshUV;
         mesh.triangles = meshTriangles;
 
         mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
         mesh.Optimize();
 
         //instantiate object with newly added mesh        
@@ -166,6 +196,9 @@ public class TerrainController : MonoBehaviour {
         _objRef.AddComponent<MeshCollider>();
         _objRef.transform.localScale = new Vector3(_objSize, _objSize, _objSize);
         _objRef.transform.parent = _terrainParent.transform;
+
+        //GameObject objN = Instantiate(_objRef, new Vector3(0, 0, _arrayIndex * _objSize), Quaternion.Euler(0, 0, 180)) as GameObject;
+        //objN.transform.parent = _terrainParent.transform;
 
 
     }
@@ -236,6 +269,26 @@ public class TerrainController : MonoBehaviour {
 	}
 
     /***************************************************************
+    * update the edge points to match each other so they can map infinitely
+    * 
+    ****************************************************************/
+    void normalizeEdges()
+    {
+        for (int i = 1; i < _arrayLength-1; i++)
+        {
+            //update X coords
+            float avgX = (_positionArray[i, 0].y + _positionArray[i, _arrayLength - 1].y)/2;
+            _positionArray[i, 0].y = avgX;
+            _positionArray[i, _arrayLength - 1].y = avgX;
+
+            //update Y coords
+            float avgY = (_positionArray[0, i].y + _positionArray[_arrayLength - 1, i].y)/2;
+            _positionArray[0, i].y = avgY;
+            _positionArray[_arrayLength - 1, i].y = avgY;
+        }
+    }
+
+    /***************************************************************
     * update the positional array using the Diamond Square Algorithim
     * 
     ****************************************************************/
@@ -269,13 +322,15 @@ public class TerrainController : MonoBehaviour {
 
 		for (int y = half; y < full; y += size) {
 			for (int x = half; x < full; x += size) {
-				square (x, y, half, Random.value * scale * 2 - scale, full);
+                float rand = Random.value * scale * 2 - scale;
+                square (x, y, half, rand, full);
 			}
 		}
 
 		for (int y = 0; y < full; y += half) {
 			for (int x = (y + half) % size; x < full; x += size) {
-				diamond (x, y, half, Random.value * scale * 2 - scale, full);
+                float rand = Random.value * scale * 2 - scale;
+                diamond (x, y, half, rand, full);
 			}
 		}
 
