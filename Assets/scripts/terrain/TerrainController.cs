@@ -108,8 +108,7 @@ public class TerrainController : MonoBehaviour {
         int[] meshTriangles = new int[ (3 * 2 * (length - 1) * (length - 1))];
 
         //create a new mesh 
-        Mesh mesh = new Mesh();
-        _objType.GetComponent<MeshFilter>().mesh = mesh;
+        Mesh mesh = new Mesh();        
 
         //set up the mesh vertices array
         int vert_index = 0;
@@ -161,9 +160,10 @@ public class TerrainController : MonoBehaviour {
         mesh.RecalculateNormals();
         mesh.Optimize();
 
-        //instantiate object with newly added mesh
-        _objType.AddComponent<MeshCollider>();
+        //instantiate object with newly added mesh        
         _objRef = Instantiate(_objType, Vector3.zero, Quaternion.Euler(0, 0, 180)) as GameObject;
+        _objRef.GetComponent<MeshFilter>().mesh = mesh;
+        _objRef.AddComponent<MeshCollider>();
         _objRef.transform.parent = _terrainParent.transform;
 
 
