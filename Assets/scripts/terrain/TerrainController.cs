@@ -9,6 +9,7 @@ public class TerrainController : MonoBehaviour {
     private GameObject _objType;
     public GameObject _terrainParent;
     public GameObject _borderBlock;
+    public GameObject _borderParent;
 
 
     public int _gridExponential = 10;
@@ -96,15 +97,19 @@ public class TerrainController : MonoBehaviour {
 
         GameObject borderN = Instantiate(_borderBlock, new Vector3(-_arrayIndex, 0, _arrayIndex/2), Quaternion.identity) as GameObject;
         borderN.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
+        borderN.transform.parent = _borderParent.transform;
 
         GameObject borderE = Instantiate(_borderBlock, new Vector3(-_arrayIndex / 2, 0, _arrayIndex), Quaternion.identity) as GameObject;
         borderE.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
+        borderE.transform.parent = _borderParent.transform;
 
         GameObject borderS = Instantiate(_borderBlock, new Vector3(0, 0, _arrayIndex / 2), Quaternion.identity) as GameObject;
         borderS.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
+        borderS.transform.parent = _borderParent.transform;
 
         GameObject borderW = Instantiate(_borderBlock, new Vector3(-_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
         borderW.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
+        borderW.transform.parent = _borderParent.transform;
 
     }
 
