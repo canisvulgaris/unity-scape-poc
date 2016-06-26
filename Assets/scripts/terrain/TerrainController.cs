@@ -139,7 +139,7 @@ public class TerrainController : MonoBehaviour {
             for (int y = 0; y < length - 1; y++)
             {
                 //add in first three vertices for mesh
-                meshTriangles[tri_index] =     (x     * length) + y;
+                meshTriangles[tri_index] =     (x * length) + y;
                 meshTriangles[tri_index + 1] = ((x+1) * length) + y;
                 meshTriangles[tri_index + 2] = (x     * length) + y + 1;
 
@@ -164,6 +164,7 @@ public class TerrainController : MonoBehaviour {
         _objRef = Instantiate(_objType, Vector3.zero, Quaternion.Euler(0, 0, 180)) as GameObject;
         _objRef.GetComponent<MeshFilter>().mesh = mesh;
         _objRef.AddComponent<MeshCollider>();
+        _objRef.transform.localScale = new Vector3(_objSize, _objSize, _objSize);
         _objRef.transform.parent = _terrainParent.transform;
 
 
