@@ -15,8 +15,9 @@ public class TerrainController : MonoBehaviour {
     public int _gridExponential = 10;
 	public float _terrainRoughness = 0.08F;
 	public float _objSize = 1;
+    public int _meshLimit = 16;
 
-	private int _arrayIndex;
+    private int _arrayIndex;
 	private int _arrayLength;
 	private Vector3[,] _positionArray;
 	private TerrainObject[,] _objArray;
@@ -76,7 +77,7 @@ public class TerrainController : MonoBehaviour {
         {
             //Debug.Log("found mesh object");
             //set up the _positionArray height map using the Diamond-Square algorithm             
-            createMeshTerrain(_positionArray);
+            createMeshTerrain(_positionArray, _meshLimit);
         }
         else
         {
@@ -113,10 +114,12 @@ public class TerrainController : MonoBehaviour {
 
     }
 
+    /***************************************************************
+    * Calculate the Terrain Height Map using Diamond Square Algorithm
+    * 
+    ***************************************************************/
     public void CalcTerrainHeightMap()
     {
-        //Debug.Log("called CalcTerrainHeightMap");
-
         if (_positionArray == null || _arrayLength == 0 || _arrayIndex == 0)
         {
             Debug.LogError("TerrainController - CalcTerrainHeightMap - params not set");
@@ -131,21 +134,49 @@ public class TerrainController : MonoBehaviour {
      * creates a new mesh for the object (does not use terrainobject)
      * 
     ***************************************************************/
-    void createMeshTerrain(Vector3[,] posArray) {
-        int length = _arrayLength;
+    void createMeshTerrain(Vector3[,] posArray, int meshLimit) {
 
-        Vector3[] meshVertices = new Vector3[ length * length ];
-        Vector2[] meshUV = new Vector2[ length * length ];
-        int[] meshTriangles = new int[ (3 * 2 * (length - 1) * (length - 1))];
+        int meshLength = _arrayIndex % meshLimit;
+
+        if (meshLength > 0)
+        {
+            Debug.LogError("meshLimit needs to be a factor of the position total.");
+        }
+
+        int meshCount = meshLength * meshLength;
+
+        //generateMesh(meshLimit, _objSize, 0, 32);
+
+        for (int x = 0; x < _arrayIndex; x += meshLimit)
+        {
+            for (int y = 0; y < _arrayIndex; y += meshLimit)
+            {
+                //Debug.Log("generateMesh - meshLimit: " + meshLimit + " -_objSize: " + _objSize + " - x: " + x + " - y: " + y);
+                generateMesh(meshLimit, _objSize, x, y);
+            }
+        }
+        
+
+    }
+
+    /***************************************************************
+     * generate the mesh based on length required and size
+     * 
+    ***************************************************************/
+    void generateMesh(int length, float size, int startx, int starty)
+    {
+        Vector3[] meshVertices = new Vector3[length * length];
+        Vector2[] meshUV = new Vector2[length * length];
+        int[] meshTriangles = new int[(3 * 2 * (length - 1) * (length - 1))];
 
         //create a new mesh 
-        Mesh mesh = new Mesh();        
+        Mesh mesh = new Mesh();
 
         //set up the mesh vertices array
         int vert_index = 0;
-        for (int i = 0; i < length; i++)
+        for (int i = startx; i < length + startx; i++)
         {
-            for (int j = 0; j < length; j++)
+            for (int j = starty; j < length + starty; j++)
             {
                 meshVertices[vert_index] = _positionArray[i, j];
                 vert_index++;
@@ -170,14 +201,14 @@ public class TerrainController : MonoBehaviour {
             for (int y = 0; y < length - 1; y++)
             {
                 //add in first three vertices for mesh
-                meshTriangles[tri_index] =     (x * length) + y;
-                meshTriangles[tri_index + 1] = ((x+1) * length) + y;
-                meshTriangles[tri_index + 2] = (x     * length) + y + 1;
+                meshTriangles[tri_index] = (x * length) + y;
+                meshTriangles[tri_index + 1] = ((x + 1) * length) + y;
+                meshTriangles[tri_index + 2] = (x * length) + y + 1;
 
                 //add in second three vertices for mesh
-                meshTriangles[tri_index + 3] = ((x+1) * length) + y;
-                meshTriangles[tri_index + 4] = ((x+1) * length) + y + 1;
-                meshTriangles[tri_index + 5] = (x     * length) + y + 1;
+                meshTriangles[tri_index + 3] = ((x + 1) * length) + y;
+                meshTriangles[tri_index + 4] = ((x + 1) * length) + y + 1;
+                meshTriangles[tri_index + 5] = (x * length) + y + 1;
 
                 //bump index by 6 for previous puts
                 tri_index += 6;
@@ -186,7 +217,8 @@ public class TerrainController : MonoBehaviour {
 
         //calculate normals
         //Debug.Log(mesh.normals);
-
+        mesh.name = "terrain-" + length + "-"+ startx + "-" + starty;
+        mesh.Clear();
         mesh.vertices = meshVertices;
         mesh.uv = meshUV;
         mesh.triangles = meshTriangles;
@@ -195,24 +227,22 @@ public class TerrainController : MonoBehaviour {
         mesh.RecalculateBounds();
         mesh.Optimize();
 
-        //instantiate object with newly added mesh        
-        _objRef = Instantiate(_objType, Vector3.zero, Quaternion.Euler(0, 0, 180)) as GameObject;
-        _objRef.GetComponent<MeshFilter>().mesh = mesh;
-        _objRef.AddComponent<MeshCollider>();
-        _objRef.transform.localScale = new Vector3(_objSize, _objSize, _objSize);
-        _objRef.transform.parent = _terrainParent.transform;
+        //instantiate object with newly added mesh       
+        GameObject newMesh = Instantiate(_objType, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 180)) as GameObject;
+        newMesh.GetComponent<MeshFilter>().mesh = mesh;
+        newMesh.AddComponent<MeshCollider>();
+        newMesh.transform.localScale = new Vector3(size, size, size);
+        newMesh.transform.parent = _terrainParent.transform;
 
         //GameObject objN = Instantiate(_objRef, new Vector3(0, 0, _arrayIndex * _objSize), Quaternion.Euler(0, 0, 180)) as GameObject;
         //objN.transform.parent = _terrainParent.transform;
-
-
     }
 
     /***************************************************************
      * Generate a flat terrain using TerrainObject
      * 
      ****************************************************************/
-	void createFlatTerrainUsingObject() {
+    void createFlatTerrainUsingObject() {
 		int length = _arrayLength;
 
 		for (int i = 0; i < length; i++) {
