@@ -79,7 +79,7 @@ public class TerrainController : MonoBehaviour {
             //Debug.Log("found mesh object");
             //set up the _positionArray height map using the Diamond-Square algorithm             
             createMeshTerrain(_positionArray, _meshLimit);
-            normalizeAllEdgeVertices();
+            //normalizeAllEdgeVertices();
         }
         else
         {
@@ -239,7 +239,7 @@ public class TerrainController : MonoBehaviour {
         _objRef.Add(newMeshObj);
 
         //display normals
-        //drawVertexNormals(newMeshObj);
+        drawVertexNormals(newMeshObj);
 
         //GameObject objN = Instantiate(_objRef, new Vector3(0, 0, _arrayIndex * _objSize), Quaternion.Euler(0, 0, 180)) as GameObject;
         //objN.transform.parent = _terrainParent.transform;
@@ -356,13 +356,39 @@ public class TerrainController : MonoBehaviour {
     {
 
         Mesh mesh = meshObj.GetComponent<MeshFilter>().mesh;
-        Color color = new Color(Random.value, Random.value, Random.value);
+        //Color color = new Color(Random.value, Random.value, Random.value);        
+        float colorValue = 1.0f;
+        float colorDiff = 0.01f;
 
-        for (int i = 0; i < mesh.vertexCount; i++)
+
+        //for (int i = 0; i < mesh.vertexCount; i++)
+        //{
+        //    Vector3 fixedVertex = Quaternion.Euler(0, 0, 180) * mesh.vertices[i];
+        //    Vector3 fixedNormal = Quaternion.Euler(0, 0, 180) * mesh.normals[i];
+        //    //Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, color, 10.0f);
+        //}
+
+        //try setting all bounding vertices to vector3.up
+        for (int x = 0; x < _meshLimit + 1; x++)
         {
-            Vector3 fixedVertex = Quaternion.Euler(0, 0, 180) * mesh.vertices[i];
-            Vector3 fixedNormal = Quaternion.Euler(0, 0, 180) * mesh.normals[i];
-            Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, color, 120.0f);
+            for (int y = 0; y < _meshLimit + 1; y++)
+            {
+                if (x == 0 || y == 0 || x == _meshLimit || y == _meshLimit)
+                {
+                    colorValue -= colorDiff;
+                    Color color = new Color(1.0f, colorValue, colorValue);
+                    int index = ((_meshLimit + 1) * x) + y;
+                    //Debug.Log("x: " + x + " - y: " + y + " - index: " + index);
+
+                    Vector3 fixedVertex = Quaternion.Euler(0, 0, 180) * mesh.vertices[index];
+                    Vector3 fixedNormal = Quaternion.Euler(0, 0, 180) * mesh.normals[index];                    
+                    Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, color, 100.0f);
+
+                    mesh.normals[index] = Vector3.up;
+                    meshObj.GetComponent<MeshFilter>().mesh = mesh;
+
+                }
+            }
         }
 
     }
