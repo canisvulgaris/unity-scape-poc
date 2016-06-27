@@ -15,6 +15,7 @@ public class fireProjectile : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
+        //TODO : need to set expiration for projectiles so they dissappear eventually
         if (Input.GetMouseButtonDown(0))
         {
             var position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _distance);
