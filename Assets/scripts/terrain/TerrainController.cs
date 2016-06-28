@@ -79,7 +79,7 @@ public class TerrainController : MonoBehaviour {
             //Debug.Log("found mesh object");
             //set up the _positionArray height map using the Diamond-Square algorithm             
             createMeshTerrain(_positionArray, _meshLimit);
-            //normalizeAllEdgeVertices();
+            updateVertexNormalsForAllMeshes();
         }
         else
         {
@@ -239,8 +239,8 @@ public class TerrainController : MonoBehaviour {
         //add to object ref array
         _objRef.Add(newMeshObj);
 
-        //display normals
-        updateVertexNormals(newMeshObj);
+        //update normals
+        //updateVertexNormals(newMeshObj);
 
         //GameObject objN = Instantiate(_objRef, new Vector3(0, 0, _arrayIndex * _objSize), Quaternion.Euler(0, 0, 180)) as GameObject;
         //objN.transform.parent = _terrainParent.transform;
@@ -335,17 +335,11 @@ public class TerrainController : MonoBehaviour {
     * update the vertice normals to fix lighting issues
     * 
     ****************************************************************/
-    void normalizeAllEdgeVertices()
+    void updateVertexNormalsForAllMeshes()
     {
         for(int j = 0; j < _objRef.Count; j++)
         {
-            Mesh mesh = _objRef[j].GetComponent<MeshFilter>().mesh;
-            Vector3[] normals = mesh.normals;
-                                    
-            for (int i = 0; i < mesh.vertexCount; i++)
-            {
-                Debug.DrawLine(mesh.vertices[i], mesh.vertices[i] + normals[i] * 2, Color.red, 10.0f);
-            }
+            updateVertexNormals(_objRef[j]);
         }
     }
 
