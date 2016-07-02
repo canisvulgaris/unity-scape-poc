@@ -239,9 +239,6 @@ public class TerrainController : MonoBehaviour {
         //add to object ref array
         _objRef.Add(newMeshObj);
 
-        //update normals
-        //updateVertexNormals(newMeshObj);
-
         //GameObject objN = Instantiate(_objRef, new Vector3(0, 0, _arrayIndex * _objSize), Quaternion.Euler(0, 0, 180)) as GameObject;
         //objN.transform.parent = _terrainParent.transform;
     }
@@ -332,19 +329,7 @@ public class TerrainController : MonoBehaviour {
     }
 
     /***************************************************************
-    * update the vertice normals to fix lighting issues
-    * 
-    ****************************************************************/
-    void updateVertexNormalsForAllMeshes()
-    {
-        for(int j = 0; j < _objRef.Count; j++)
-        {
-            updateVertexNormals(_objRef[j]);
-        }
-    }
-
-    /***************************************************************
-    * draw debug lines for vertex normals
+    * update vertext normals and draw debug lines
     * 
     ****************************************************************/
     void updateVertexNormals(GameObject meshObj)
@@ -378,6 +363,138 @@ public class TerrainController : MonoBehaviour {
 
         //update normal array
         mesh.normals = normals;
+    }
+
+
+    /***************************************************************
+    * update the vertice normals to fix lighting issues
+    * 
+    ****************************************************************/
+    void updateVertexNormalsForAllMeshes()
+    {
+        for (int j = 0; j < _objRef.Count; j++)
+        {
+            updateVertexNormalWithNeighbours(_objRef[j]);
+        }
+    }
+
+
+    /***************************************************************
+    * update normals for vertex and neighbours
+    * 
+    ****************************************************************/
+    void updateVertexNormalWithNeighbours(GameObject meshObj)
+    {
+
+        //Mesh mesh = meshObj.GetComponent<MeshFilter>().mesh;
+        //Vector3[] normals = mesh.normals;       
+        //normals = findNeighbouringVertices(meshObj, normals, x, y);       
+
+        //nw point
+        findNeighbouringVertices(meshObj, 0, _meshLimit);
+
+        //se point
+        findNeighbouringVertices(meshObj, _meshLimit, 0);
+
+    }
+
+    /***************************************************************
+    * find all neighbouring vertices in other meshes
+    * 
+    ****************************************************************/
+    void findNeighbouringVertices(GameObject mainObj, int x, int y)
+    {
+        Mesh mainMesh = mainObj.GetComponent<MeshFilter>().mesh;
+        Vector3[] mainNormals = mainMesh.normals;
+
+        int objCount = _objRef.Count;
+        int mainObjIndex = _objRef.IndexOf(mainObj);
+        int terrainLength = _arrayIndex/_meshLimit;
+
+        //Debug.Log("mainObjIndex:" + mainObjIndex);
+        //Debug.Log("mainMesh name: " + mainMesh.name);
+
+        if (x == 0 && y == _meshLimit)
+        {
+            int northObjIndex = mainObjIndex + 1;
+            //Debug.Log("northObjIndex: " + northObjIndex);
+
+            if ((northObjIndex % terrainLength) == 0)
+            {
+                //Debug.Log("north most piece; returning");
+                return;
+            }
+
+            GameObject northObj = _objRef[northObjIndex];
+            Mesh northMesh = northObj.GetComponent<MeshFilter>().mesh;
+            Vector3[] northNormals = northMesh.normals;
+            float tempColor = 0.0f;
+
+            for (int iter = x; iter < _meshLimit + 1; iter++)
+            {
+                tempColor += 0.1f;
+                int mainIndex = ((_meshLimit + 1) * iter) + y;
+                int northIndex = ((_meshLimit + 1) * iter);
+
+                Vector3 newNormal = mainNormals[mainIndex] + northNormals[northIndex];
+                newNormal.Normalize();
+
+                mainNormals[mainIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
+                northNormals[northIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
+
+                mainMesh.normals = mainNormals;
+                northMesh.normals = northNormals;
+
+                //Vector3 fixedVertex = Quaternion.Euler(0, 0, 180) * mainMesh.vertices[mainIndex];
+                //Vector3 fixedNormal = Quaternion.Euler(0, 0, 180) * mainMesh.normals[mainIndex];
+                //Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, new Color(1, tempColor, tempColor), 5.0f);
+
+                //fixedVertex = Quaternion.Euler(0, 0, 180) * northMesh.vertices[northIndex];
+                //fixedNormal = Quaternion.Euler(0, 0, 180) * northMesh.normals[northIndex];
+                //Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, new Color(tempColor, tempColor, 1), 8.0f);
+            }
+        }
+        else if (x == _meshLimit && y == 0)
+        {
+            int westObjIndex = mainObjIndex + terrainLength;                      
+            if (westObjIndex >= objCount)
+            {
+                //Debug.Log("west most piece; returning");
+                return;
+            }
+            GameObject westObj = _objRef[westObjIndex];
+            Mesh westMesh = westObj.GetComponent<MeshFilter>().mesh;
+            //Debug.Log("westObjIndex: " + westObjIndex); 
+            //Debug.Log("westMesh name: " + westMesh.name);
+            Vector3[] westNormals = westMesh.normals;
+            float tempColor = 0.0f;
+            for (int iter = 0; iter < _meshLimit + 1; iter++)
+            {
+                tempColor += 0.1f;
+                int mainIndex = ((_meshLimit + 1) * _meshLimit) + iter;
+                int westIndex = iter;
+                Vector3 newNormal = mainNormals[mainIndex] + westNormals[westIndex];
+                newNormal.Normalize();
+
+                mainNormals[mainIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
+                westNormals[westIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
+
+                mainMesh.normals = mainNormals;
+                westMesh.normals = westNormals;
+
+                //Vector3 fixedVertex = Quaternion.Euler(0, 0, 180) * mainMesh.vertices[mainIndex];
+                //Vector3 fixedNormal = Quaternion.Euler(0, 0, 180) * mainMesh.normals[mainIndex];
+                //Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, new Color(1, tempColor, tempColor), 5.0f);
+
+                //fixedVertex = Quaternion.Euler(0, 0, 180) * westMesh.vertices[westIndex];
+                //fixedNormal = Quaternion.Euler(0, 0, 180) * westMesh.normals[westIndex];
+                //Debug.DrawLine(fixedVertex, fixedVertex + fixedNormal * 2, new Color(tempColor, tempColor, 1), 8.0f);
+            }
+        }
+        else
+        {
+            Debug.LogError("something went wrong");
+        }
     }
 
     /***************************************************************
