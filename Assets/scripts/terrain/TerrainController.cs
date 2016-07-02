@@ -374,28 +374,12 @@ public class TerrainController : MonoBehaviour {
     {
         for (int j = 0; j < _objRef.Count; j++)
         {
-            updateVertexNormalWithNeighbours(_objRef[j]);
+            //nw point
+            findNeighbouringVertices(_objRef[j], 0, _meshLimit);
+
+            //se point
+            findNeighbouringVertices(_objRef[j], _meshLimit, 0);
         }
-    }
-
-
-    /***************************************************************
-    * update normals for vertex and neighbours
-    * 
-    ****************************************************************/
-    void updateVertexNormalWithNeighbours(GameObject meshObj)
-    {
-
-        //Mesh mesh = meshObj.GetComponent<MeshFilter>().mesh;
-        //Vector3[] normals = mesh.normals;       
-        //normals = findNeighbouringVertices(meshObj, normals, x, y);       
-
-        //nw point
-        findNeighbouringVertices(meshObj, 0, _meshLimit);
-
-        //se point
-        findNeighbouringVertices(meshObj, _meshLimit, 0);
-
     }
 
     /***************************************************************
@@ -410,18 +394,13 @@ public class TerrainController : MonoBehaviour {
         int objCount = _objRef.Count;
         int mainObjIndex = _objRef.IndexOf(mainObj);
         int terrainLength = _arrayIndex/_meshLimit;
-
-        //Debug.Log("mainObjIndex:" + mainObjIndex);
-        //Debug.Log("mainMesh name: " + mainMesh.name);
-
+        
         if (x == 0 && y == _meshLimit)
         {
             int northObjIndex = mainObjIndex + 1;
-            //Debug.Log("northObjIndex: " + northObjIndex);
 
             if ((northObjIndex % terrainLength) == 0)
             {
-                //Debug.Log("north most piece; returning");
                 return;
             }
 
@@ -439,8 +418,8 @@ public class TerrainController : MonoBehaviour {
                 Vector3 newNormal = mainNormals[mainIndex] + northNormals[northIndex];
                 newNormal.Normalize();
 
-                mainNormals[mainIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
-                northNormals[northIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
+                mainNormals[mainIndex] = newNormal;
+                northNormals[northIndex] = newNormal;
 
                 mainMesh.normals = mainNormals;
                 northMesh.normals = northNormals;
@@ -459,13 +438,10 @@ public class TerrainController : MonoBehaviour {
             int westObjIndex = mainObjIndex + terrainLength;                      
             if (westObjIndex >= objCount)
             {
-                //Debug.Log("west most piece; returning");
                 return;
             }
             GameObject westObj = _objRef[westObjIndex];
             Mesh westMesh = westObj.GetComponent<MeshFilter>().mesh;
-            //Debug.Log("westObjIndex: " + westObjIndex); 
-            //Debug.Log("westMesh name: " + westMesh.name);
             Vector3[] westNormals = westMesh.normals;
             float tempColor = 0.0f;
             for (int iter = 0; iter < _meshLimit + 1; iter++)
@@ -476,8 +452,8 @@ public class TerrainController : MonoBehaviour {
                 Vector3 newNormal = mainNormals[mainIndex] + westNormals[westIndex];
                 newNormal.Normalize();
 
-                mainNormals[mainIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
-                westNormals[westIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
+                mainNormals[mainIndex] = newNormal;
+                westNormals[westIndex] = newNormal;
 
                 mainMesh.normals = mainNormals;
                 westMesh.normals = westNormals;
