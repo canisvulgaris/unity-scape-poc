@@ -439,8 +439,8 @@ public class TerrainController : MonoBehaviour {
                 Vector3 newNormal = mainNormals[mainIndex] + northNormals[northIndex];
                 newNormal.Normalize();
 
-                mainNormals[mainIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
-                northNormals[northIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
+                mainNormals[mainIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
+                northNormals[northIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
 
                 mainMesh.normals = mainNormals;
                 northMesh.normals = northNormals;
@@ -476,8 +476,8 @@ public class TerrainController : MonoBehaviour {
                 Vector3 newNormal = mainNormals[mainIndex] + westNormals[westIndex];
                 newNormal.Normalize();
 
-                mainNormals[mainIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
-                westNormals[westIndex] = new Vector3(0.0f, -1.0f, 0.0f); 
+                mainNormals[mainIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
+                westNormals[westIndex] = newNormal;// new Vector3(0.0f, -1.0f, 0.0f); 
 
                 mainMesh.normals = mainNormals;
                 westMesh.normals = westNormals;
