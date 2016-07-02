@@ -167,7 +167,7 @@ public class TerrainController : MonoBehaviour {
             Debug.LogError("meshLimit needs to be a factor of the position total.");
         }
 
-        int meshCount = meshLength * meshLength;
+        //int meshCount = meshLength * meshLength;
 
         //generateMesh(meshLimit, _objSize, 0, 32);
 
@@ -358,8 +358,7 @@ public class TerrainController : MonoBehaviour {
 
         Mesh mesh = meshObj.GetComponent<MeshFilter>().mesh;
         Vector3[] normals = mesh.normals;
-
-        Color color = new Color(Random.value, Random.value, Random.value);
+        //Color color = new Color(Random.value, Random.value, Random.value);
 
         //try setting all bounding vertices to vector3.up
         for (int x = 0; x < _meshLimit + 1; x++)
