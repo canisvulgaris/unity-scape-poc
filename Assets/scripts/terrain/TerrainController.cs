@@ -22,7 +22,7 @@ public class TerrainController : MonoBehaviour {
 	private int _arrayLength;
 	private Vector3[,] _positionArray;
 	private TerrainObject[,] _objArray;
-    private List<GameObject> _objRef = new List<GameObject>();
+    private List<GameObject> _objRef;
 
     //private System.DateTime _startTime = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
     //private float _count = 0;
@@ -33,13 +33,12 @@ public class TerrainController : MonoBehaviour {
      ***************************************************************/
     void Start () {
         //init
-        RefreshTerrain();
+        BuildTerrain();
     }
 
     public void RefreshTerrain()
     {
         //Debug.Log("called RefreshTerrain");
-        _objType = _objectsAvailable[_objSelection];
 
         if (_objType == null)
         {
@@ -57,15 +56,32 @@ public class TerrainController : MonoBehaviour {
     public void ClearTerrain()
     {
         //Debug.Log("called ClearTerrain");
+
+        //clear terrain meshes
         for (var i = 0; i < _terrainParent.transform.childCount; i++)
         {
             Destroy(_terrainParent.transform.GetChild(i).gameObject);
         }
+
+        //clear border colliders
+        for (var i = 0; i < _borderParent.transform.childCount; i++)
+        {
+            Destroy(_borderParent.transform.GetChild(i).gameObject);
+        }        
     }
 
     public void BuildTerrain()
     {
         //Debug.Log("called BuildTerrain");
+
+        _objType = _objectsAvailable[_objSelection];
+        _objRef = new List<GameObject>();
+
+        if (_objType == null)
+        {
+            Debug.LogError("TerrainController - _objType not set");
+        }
+        
         //set up initial params
         _arrayIndex = (int)Mathf.Pow(2, _gridExponential);
         _arrayLength = _arrayIndex + 1;
