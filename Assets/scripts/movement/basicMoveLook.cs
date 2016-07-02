@@ -12,13 +12,15 @@ public class basicMoveLook : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
-	}
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        
-		rotationX += Input.GetAxis("Mouse X")*lookSpeed;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        rotationX += Input.GetAxis("Mouse X")*lookSpeed;
 		rotationY += Input.GetAxis("Mouse Y")*lookSpeed;
 		rotationY = Mathf.Clamp (rotationY, -90, 90);
 
