@@ -3,7 +3,8 @@ using System.Collections;
 
 public class fireProjectile : MonoBehaviour {
 
-    public GameObject _objProj;
+    public GameObject _objProj1;
+    public GameObject _objProj2;
     public GameObject _projParent;
     public float _distance = 10.0f;
 
@@ -21,7 +22,18 @@ public class fireProjectile : MonoBehaviour {
             var position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _distance);
 
             position = Camera.main.ScreenToWorldPoint(position);
-            GameObject objFired = Instantiate(_objProj, Camera.main.transform.position, Quaternion.identity) as GameObject;
+            GameObject objFired = Instantiate(_objProj1, Camera.main.transform.position, Quaternion.identity) as GameObject;
+            objFired.transform.parent = _projParent.transform;
+            objFired.transform.LookAt(position);
+            objFired.GetComponent<Rigidbody>().AddForce(objFired.transform.forward * 1000);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            var position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _distance);
+
+            position = Camera.main.ScreenToWorldPoint(position);
+            GameObject objFired = Instantiate(_objProj2, Camera.main.transform.position, Quaternion.identity) as GameObject;
             objFired.transform.parent = _projParent.transform;
             objFired.transform.LookAt(position);
             objFired.GetComponent<Rigidbody>().AddForce(objFired.transform.forward * 1000);
