@@ -14,13 +14,16 @@ public class TerrainController : MonoBehaviour {
 
     public int _gridExponential = 10;
 	public float _terrainRoughness = 0.08F;
-	public float _objSize = 1;
+    public float _terrainWave = 0.1F;
+    public float _objSize = 1;
     public int _meshLimit = 16;
     public int _normalSmoothAngle = 60;
 
     private int _arrayIndex;
 	private int _arrayLength;
-	private Vector3[,] _positionArray;
+    private float _waveOffsetX;
+    private float _waveOffsetY;
+    private Vector3[,] _positionArray;
 	private TerrainObject[,] _objArray;
     private List<GameObject> _objRef;
 
@@ -86,6 +89,8 @@ public class TerrainController : MonoBehaviour {
         _arrayIndex = (int)Mathf.Pow(2, _gridExponential);
         _arrayLength = _arrayIndex + 1;
         _positionArray = new Vector3[_arrayLength, _arrayLength];
+        _waveOffsetX = Random.value * _arrayIndex * 2 - _arrayIndex;
+        _waveOffsetY = Random.value * _arrayIndex * 2 - _arrayIndex;
 
         CalcTerrainHeightMap();
         AddBorder();
@@ -543,14 +548,21 @@ public class TerrainController : MonoBehaviour {
     * 
     ****************************************************************/
     void diamond(int x, int y, int half, float offset, int full) {
-		//Debug.Log ("diamond() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);	
-		float d1 = (y - half) >= 0 ? _positionArray [x, (y - half)].y : 0;
+        //Debug.Log ("diamond() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);	
+
+        var offsetValue = offset * Mathf.Cos(_terrainWave * (x + _waveOffsetX)) * Mathf.Cos(_terrainWave * (y + _waveOffsetY));
+        float roughness = _terrainRoughness;
+        var xRand = Random.value * roughness * 2 - roughness;
+        var yRand = Random.value * roughness * 2 - roughness;
+
+
+        float d1 = (y - half) >= 0 ? _positionArray [x, (y - half)].y : 0;
 		float d2 = (x + half) < full ? _positionArray [(x + half), y].y : 0;
 		float d3 = (y + half) < full ? _positionArray [x, (y + half)].y : 0;
 		float d4 = ((x - half) >= 0) ? _positionArray [(x - half), y].y : 0;
 
 		float average = ( d1 + d2 + d3 + d4 ) / 4;
-		_positionArray [x, y] = new Vector3 (x, average + offset, y);
+		_positionArray [x, y] = new Vector3 (x + xRand, average + offsetValue, y + yRand);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
@@ -559,14 +571,21 @@ public class TerrainController : MonoBehaviour {
     * 
     ****************************************************************/
     void square(int x, int y, int half, float offset, int full) {
-		//Debug.Log ("square() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);
-		float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray [(x - half), (y - half)].y : 0;
+        //Debug.Log ("square() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);
+
+        var offsetValue = offset * Mathf.Cos(_terrainWave * x) * Mathf.Cos(_terrainWave * y);
+
+        float roughness = _terrainRoughness;
+        var xRand = Random.value * roughness * 2 - roughness;
+        var yRand = Random.value * roughness * 2 - roughness;
+
+        float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray [(x - half), (y - half)].y : 0;
 		float s2 = ((y - half) >= 0 || (x + half) < full) ? _positionArray [(x + half), (y - half)].y : 0;
 		float s3 = ((x + half) < full || (y + half) < full) ? _positionArray [(x + half), (y + half)].y : 0;
 		float s4 = ((x - half) >= 0 || (y + half) < full) ? _positionArray [(x - half), (y + half)].y : 0;
 
 		float average = ( s1 + s2 + s3 + s4 ) / 4;
-		_positionArray [x, y] = new Vector3 (x, average + offset, y);
+		_positionArray [x, y] = new Vector3 (x + xRand, average + offsetValue, y + yRand);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
