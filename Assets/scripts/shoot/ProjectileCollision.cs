@@ -27,30 +27,34 @@ public class ProjectileCollision : MonoBehaviour
         {
             //decrease terrain height within radius of _explosionRadiusObj
             _projectileParent = GameObject.Find("ProjectileParent");
+			//Debug.Log ("contact: " + collision.collider.name);
 
 			ShowAreaOfEffectSphere ();
-                      
+
 			int terrainLayer = 1 << LayerMask.NameToLayer("Terrain");
-            Collider[] hitColliders = Physics.OverlapSphere(_explosionRadiusObj.transform.position, _explosionRadiusObj.transform.localScale.x, terrainLayer);
+            Collider[] hitColliders = Physics.OverlapSphere(_explosionRadiusObj.transform.position, radius, terrainLayer);
+					
             for (int i = 0; i < hitColliders.Length; i ++)
             {
                 //Debug.Log("mesh contact: " + hitColliders[i].transform.GetComponent<MeshFilter>().mesh.name);
 
-				int[] verticesInBounds = GetVerticesInBounds (hitColliders[i]);
-				if (verticesInBounds.Length > 0){
+				Mesh collisionMesh = hitColliders[i].transform.GetComponent<MeshFilter> ().mesh;
+				int[] verticesInBounds = GetVerticesInBounds (hitColliders[i], collisionMesh);
 
-					Mesh collisionMesh = hitColliders[i].transform.GetComponent<MeshFilter> ().mesh;
+				if (verticesInBounds.Length > 0){
 					Vector3[] collisionMeshVertices = collisionMesh.vertices;
 					
 					for (int j = 0; j < verticesInBounds.Length; j++) {
-						collisionMeshVertices [j].y -= 3;
+						//Debug.Log ("updating vertices -  j: " + j );
+						collisionMeshVertices [verticesInBounds[j]].y -= 3;
 					}
 
 					collisionMesh.vertices = collisionMeshVertices;
 				}
             }
 
-            Destroy(gameObject);
+			Destroy (_explosionRadiusObj);
+            Destroy (gameObject);
         }
     }
 
@@ -62,23 +66,22 @@ public class ProjectileCollision : MonoBehaviour
 		_explosionRadiusObj.transform.position = transform.position;
 		_explosionRadiusObj.transform.rotation = transform.rotation;
 		_explosionRadiusObj.transform.parent = _projectileParent.transform;
-		//_explosionRadiusObj.GetComponent<MeshRenderer> ().enabled = false;
+		_explosionRadiusObj.GetComponent<MeshRenderer> ().enabled = false;
 	}
 
 
-	int[] GetVerticesInBounds(Collider collider) {
+	int[] GetVerticesInBounds(Collider collider, Mesh collisionMesh) {
 
 		int[] matchedVerticesArray;
 		List<int> matchedVerticesList = new List<int>();
-		Mesh collisionMesh = collider.transform.GetComponent<MeshFilter> ().mesh;
+		Color color = new Color (Random.value, Random.value, Random.value, 1.0f);
 
-		for (int iter = 0; iter < 1; iter++) {
-			//Debug.Log ("collisionMesh.vertices [iter]: " + collisionMesh.vertices [iter]);
-			//Debug.Log ("collider.transform.TransformPoint(collisionMesh.vertices [iter])): " + collider.transform.TransformPoint(collisionMesh.vertices [iter]));
-			//Debug.Log ("transform.InverseTransformPoint(collider.transform.TransformPoint(collisionMesh.vertices [iter])): " + transform.InverseTransformPoint (collider.transform.TransformPoint (collisionMesh.vertices [iter])));
+		for (int iter = 0; iter < collisionMesh.vertexCount; iter++) {
+			Vector3 convertedVertex = collider.transform.TransformPoint (collisionMesh.vertices [iter]);
 
-			if (collider.bounds.Contains (transform.TransformPoint(collisionMesh.vertices [iter]))) {
-				Debug.Log ("matched vert: " + collisionMesh.vertices [iter]);
+			if (_explosionRadiusObj.GetComponent<SphereCollider>().bounds.Contains (convertedVertex)) {
+				//Debug.DrawRay (convertedVertex, Vector3.up, color, 50.0f);
+				//Debug.Log ("matched vert - iter: " + iter + " - vector: " + collisionMesh.vertices [iter]);
 				matchedVerticesList.Add(iter);
 			}
 		}
