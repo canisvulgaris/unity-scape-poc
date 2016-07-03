@@ -40,20 +40,21 @@ public class ProjectileCollision : MonoBehaviour
 
 				if (verticesInBounds.Length > 0){
 					Vector3[] collisionMeshVertices = collisionMesh.vertices;
-					
+
+                    float circleRadius = radius * 0.6f;
+
 					for (int j = 0; j < verticesInBounds.Length; j++) {
 
 						float distanceToSphereCenter = Vector3.Distance(collisionMeshVertices [verticesInBounds[j]], _explosionRadiusObj.transform.position);
-						Debug.Log ("distanceToSphereCenter: " + distanceToSphereCenter);
+						//Debug.Log ("distanceToSphereCenter: " + distanceToSphereCenter);
 
-						if (radius > distanceToSphereCenter) { // && collisionMeshVertices [verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y) {
-							collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, -1.0f * (radius - distanceToSphereCenter));
+						if (circleRadius > distanceToSphereCenter && collisionMeshVertices [verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y) {
+							collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, -1.0f * (circleRadius - distanceToSphereCenter));
 						}
-						else if (radius < distanceToSphereCenter) {
-							collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, distanceToSphereCenter - radius);
-						}
+						//else if (radius < distanceToSphereCenter) {
+						//	collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, distanceToSphereCenter - radius);
+						//}
 
-						Debug.Log ("NEW distanceToSphereCenter: " + Vector3.Distance(collisionMeshVertices [verticesInBounds[j]], _explosionRadiusObj.transform.position));
 
 											
 //						if (radius > distanceToSphereCenter) {

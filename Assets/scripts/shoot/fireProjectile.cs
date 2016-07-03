@@ -51,7 +51,7 @@ public class FireProjectile : MonoBehaviour {
     }
 
 	IEnumerator ResetButtonClicked() {		
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.01f);
 		buttonClicked = false;
 	}
 
