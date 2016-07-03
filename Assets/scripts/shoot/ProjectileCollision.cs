@@ -51,29 +51,6 @@ public class ProjectileCollision : MonoBehaviour
 						if (circleRadius > distanceToSphereCenter && collisionMeshVertices [verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y) {
 							collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, -1.0f * (circleRadius - distanceToSphereCenter));
 						}
-						//else if (radius < distanceToSphereCenter) {
-						//	collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, distanceToSphereCenter - radius);
-						//}
-
-
-											
-//						if (radius > distanceToSphereCenter) {
-//							collisionMeshVertices [verticesInBounds [j]].y -= (radius - distanceToSphereCenter);// + (Random.value * 0.2f);
-//						} else {
-//							collisionMeshVertices [verticesInBounds [j]].y += (distanceToSphereCenter - radius);// + (Random.value * 0.2f);
-//						}
-
-//						if (collisionMeshVertices [verticesInBounds [j]].x > _explosionRadiusObj.transform.position.x) {
-//							collisionMeshVertices [verticesInBounds [j]].x += Random.value * 0.5f;
-//						} else {
-//							collisionMeshVertices [verticesInBounds[j]].x -= Random.value * 0.5f;
-//						}
-//							
-//						if (collisionMeshVertices [verticesInBounds [j]].z > _explosionRadiusObj.transform.position.z) {
-//							collisionMeshVertices [verticesInBounds[j]].z += Random.value * 0.5f;
-//						} else {
-//							collisionMeshVertices [verticesInBounds[j]].z -= Random.value * 0.5f;
-//						}
 					}
 
 					collisionMesh.vertices = collisionMeshVertices;
@@ -104,7 +81,7 @@ public class ProjectileCollision : MonoBehaviour
 
 		int[] matchedVerticesArray;
 		List<int> matchedVerticesList = new List<int>();
-		Color color = new Color (Random.value, Random.value, Random.value, 1.0f);
+		//Color color = new Color (Random.value, Random.value, Random.value, 1.0f);
 
 		for (int iter = 0; iter < collisionMesh.vertexCount; iter++) {
 			Vector3 convertedVertex = collider.transform.TransformPoint (collisionMesh.vertices [iter]);
