@@ -8,6 +8,8 @@ public class FireProjectile : MonoBehaviour {
     public GameObject _projParent;
     public float _distance = 10.0f;
 
+	private bool buttonClicked = false;
+
     // Use this for initialization
     void Start () {
 	
@@ -19,24 +21,38 @@ public class FireProjectile : MonoBehaviour {
         //TODO : need to set expiration for projectiles so they dissappear eventually
         if (Input.GetMouseButtonDown(0))
         {
-            var position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _distance);
+			if (!buttonClicked) {
+				buttonClicked = true;
+				var position = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, _distance);
 
-            position = Camera.main.ScreenToWorldPoint(position);
-            GameObject objFired = Instantiate(_objProj1, Camera.main.transform.position, Quaternion.identity) as GameObject;
-            objFired.transform.parent = _projParent.transform;
-            objFired.transform.LookAt(position);
-            objFired.GetComponent<Rigidbody>().AddForce(objFired.transform.forward * 1000);
+				position = Camera.main.ScreenToWorldPoint (position);
+				GameObject objFired = Instantiate (_objProj1, Camera.main.transform.position, Quaternion.identity) as GameObject;
+				objFired.transform.parent = _projParent.transform;
+				objFired.transform.LookAt (position);
+				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * 1000);
+				StartCoroutine(ResetButtonClicked());
+			}
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            var position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _distance);
+			if (!buttonClicked) {
+				buttonClicked = true;
+				var position = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, _distance);
 
-            position = Camera.main.ScreenToWorldPoint(position);
-            GameObject objFired = Instantiate(_objProj2, Camera.main.transform.position, Quaternion.identity) as GameObject;
-            objFired.transform.parent = _projParent.transform;
-            objFired.transform.LookAt(position);
-            objFired.GetComponent<Rigidbody>().AddForce(objFired.transform.forward * 1000);
+				position = Camera.main.ScreenToWorldPoint (position);
+				GameObject objFired = Instantiate (_objProj2, Camera.main.transform.position, Quaternion.identity) as GameObject;
+				objFired.transform.parent = _projParent.transform;
+				objFired.transform.LookAt (position);
+				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * 1000);
+				StartCoroutine (ResetButtonClicked ());
+			}
         }
     }
+
+	IEnumerator ResetButtonClicked() {		
+		yield return new WaitForSeconds(0.1f);
+		buttonClicked = false;
+	}
+
 }
