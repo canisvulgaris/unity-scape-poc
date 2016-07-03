@@ -42,8 +42,37 @@ public class ProjectileCollision : MonoBehaviour
 					Vector3[] collisionMeshVertices = collisionMesh.vertices;
 					
 					for (int j = 0; j < verticesInBounds.Length; j++) {
-						//Debug.Log ("updating vertices -  j: " + j );
-						collisionMeshVertices [verticesInBounds[j]].y -= 3;
+
+						float distanceToSphereCenter = Vector3.Distance(collisionMeshVertices [verticesInBounds[j]], _explosionRadiusObj.transform.position);
+						Debug.Log ("distanceToSphereCenter: " + distanceToSphereCenter);
+
+						if (radius > distanceToSphereCenter) { // && collisionMeshVertices [verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y) {
+							collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, -1.0f * (radius - distanceToSphereCenter));
+						}
+						else if (radius < distanceToSphereCenter) {
+							collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, distanceToSphereCenter - radius);
+						}
+
+						Debug.Log ("NEW distanceToSphereCenter: " + Vector3.Distance(collisionMeshVertices [verticesInBounds[j]], _explosionRadiusObj.transform.position));
+
+											
+//						if (radius > distanceToSphereCenter) {
+//							collisionMeshVertices [verticesInBounds [j]].y -= (radius - distanceToSphereCenter);// + (Random.value * 0.2f);
+//						} else {
+//							collisionMeshVertices [verticesInBounds [j]].y += (distanceToSphereCenter - radius);// + (Random.value * 0.2f);
+//						}
+
+//						if (collisionMeshVertices [verticesInBounds [j]].x > _explosionRadiusObj.transform.position.x) {
+//							collisionMeshVertices [verticesInBounds [j]].x += Random.value * 0.5f;
+//						} else {
+//							collisionMeshVertices [verticesInBounds[j]].x -= Random.value * 0.5f;
+//						}
+//							
+//						if (collisionMeshVertices [verticesInBounds [j]].z > _explosionRadiusObj.transform.position.z) {
+//							collisionMeshVertices [verticesInBounds[j]].z += Random.value * 0.5f;
+//						} else {
+//							collisionMeshVertices [verticesInBounds[j]].z -= Random.value * 0.5f;
+//						}
 					}
 
 					collisionMesh.vertices = collisionMeshVertices;
