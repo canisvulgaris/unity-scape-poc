@@ -27,18 +27,15 @@ public class ProjectileCollision : MonoBehaviour
         {
             //decrease terrain height within radius of _explosionRadiusObj
             _projectileParent = GameObject.Find("ProjectileParent");
-			//Debug.Log ("contact: " + collision.collider.name);
 
-			ShowAreaOfEffectSphere ();
+			CreateAreaOfEffectSphere ();
 
 			int terrainLayer = 1 << LayerMask.NameToLayer("Terrain");
             Collider[] hitColliders = Physics.OverlapSphere(_explosionRadiusObj.transform.position, radius, terrainLayer);
 					
             for (int i = 0; i < hitColliders.Length; i ++)
             {
-                //Debug.Log("mesh contact: " + hitColliders[i].transform.GetComponent<MeshFilter>().mesh.name);
-
-				Mesh collisionMesh = hitColliders[i].transform.GetComponent<MeshFilter> ().mesh;
+				Mesh collisionMesh = hitColliders[i].GetComponent<MeshFilter> ().mesh;
 				int[] verticesInBounds = GetVerticesInBounds (hitColliders[i], collisionMesh);
 
 				if (verticesInBounds.Length > 0){
@@ -50,6 +47,9 @@ public class ProjectileCollision : MonoBehaviour
 					}
 
 					collisionMesh.vertices = collisionMeshVertices;
+					MeshCollider collisionMeshCollider = hitColliders [i].GetComponent<MeshCollider> ();
+					collisionMeshCollider.sharedMesh = null;
+					collisionMeshCollider.sharedMesh = collisionMesh;
 				}
             }
 
@@ -58,7 +58,7 @@ public class ProjectileCollision : MonoBehaviour
         }
     }
 
-	void ShowAreaOfEffectSphere() {
+	void CreateAreaOfEffectSphere() {
 		//show area of effect
 		_explosionRadiusObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 		_explosionRadiusObj.gameObject.name = "explosionRadiusSphere";
