@@ -223,14 +223,14 @@ public class TerrainController : MonoBehaviour {
             for (int y = 0; y < length - 1; y++)
             {
                 //add in first three vertices for mesh
-                meshTriangles[tri_index] = (x * length) + y;
+				meshTriangles[tri_index] = (x * length) + y + 1;
                 meshTriangles[tri_index + 1] = ((x + 1) * length) + y;
-                meshTriangles[tri_index + 2] = (x * length) + y + 1;
+				meshTriangles[tri_index + 2] = (x * length) + y;
 
                 //add in second three vertices for mesh
-                meshTriangles[tri_index + 3] = ((x + 1) * length) + y;
+				meshTriangles[tri_index + 3] = (x * length) + y + 1;
                 meshTriangles[tri_index + 4] = ((x + 1) * length) + y + 1;
-                meshTriangles[tri_index + 5] = (x * length) + y + 1;
+				meshTriangles[tri_index + 5] = ((x + 1) * length) + y;
 
                 //bump index by 6 for previous puts
                 tri_index += 6;
@@ -251,7 +251,7 @@ public class TerrainController : MonoBehaviour {
         mesh.Optimize();
 
         //instantiate object with newly added mesh       
-        GameObject newMeshObj = Instantiate(_objType, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 180)) as GameObject;
+        GameObject newMeshObj = Instantiate(_objType, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0)) as GameObject;
         newMeshObj.GetComponent<MeshFilter>().mesh = mesh;
         newMeshObj.AddComponent<MeshCollider>();
         newMeshObj.transform.localScale = new Vector3(size, size, size);
