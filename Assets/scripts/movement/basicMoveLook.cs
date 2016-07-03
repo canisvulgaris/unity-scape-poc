@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class basicMoveLook : MonoBehaviour {
+public class BasicMoveLook : MonoBehaviour {
 
 	public float lookSpeed = 15.0f;
 	public float moveSpeed = 15.0f;
