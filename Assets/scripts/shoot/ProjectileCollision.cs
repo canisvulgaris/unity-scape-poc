@@ -57,6 +57,8 @@ public class ProjectileCollision : MonoBehaviour
 					MeshCollider collisionMeshCollider = hitColliders [i].GetComponent<MeshCollider> ();
 					collisionMeshCollider.sharedMesh = null;
 					collisionMeshCollider.sharedMesh = collisionMesh;
+
+					GetComponent<CreateDebris> ().createDebrisParticleSystem ();
 				}
             }
 
