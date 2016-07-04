@@ -19,13 +19,8 @@ public class CreateDebris : MonoBehaviour {
 	}
 
 	public void createDebrisParticleSystem () {
-		_debrisObj = Instantiate (_debrisParticleSystemObj, transform.position + new Vector3(0, 1, 0), transform.rotation) as GameObject;
+		_debrisObj = Instantiate (_debrisParticleSystemObj, transform.position + new Vector3(0, -1, 0), Quaternion.Euler(-90, 0, 0)) as GameObject;
 		_debrisObj.transform.parent = _projectileParent.transform;
-		StartCoroutine (CleanUpDebris ());
-	}
-
-	IEnumerator CleanUpDebris() {
-		yield return new WaitForSeconds(10.0f);
-		Destroy (_debrisObj);
+        Destroy(_debrisObj.gameObject, 10.0f);     
 	}
 }
