@@ -129,12 +129,12 @@ public class TerrainController : MonoBehaviour {
         borderE.transform.parent = _borderParent.transform;
 
 		GameObject borderS = Instantiate(_borderBlock, new Vector3(_arrayIndex, 0, _arrayIndex / 2), Quaternion.identity) as GameObject;
-        borderS.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
-        borderS.transform.parent = _borderParent.transform;
+      	borderS.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
+      	borderS.transform.parent = _borderParent.transform;
 
-        GameObject borderW = Instantiate(_borderBlock, new Vector3(_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
-        borderW.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
-        borderW.transform.parent = _borderParent.transform;
+//        GameObject borderW = Instantiate(_borderBlock, new Vector3(_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
+//        borderW.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
+//        borderW.transform.parent = _borderParent.transform;
 
     }
 
