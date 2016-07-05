@@ -1,10 +1,13 @@
 # SCAPE_poc
 
 # in progress
-- add explosion to the sphere collision with terrain
-- do not let south border wall interfere with projectiles
+- do not let south border wall interfere with projectiles, but make it block objects
 
 # todo
+- 
+
+#done
+- add explosion to the sphere collision with terrain
 - limit the movement of camera past certain point
 
 #notes
