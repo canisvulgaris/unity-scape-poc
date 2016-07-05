@@ -12,8 +12,8 @@ public class EngineController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (Input.GetButtonDown ("Jump")) {
-		    GetComponent<Rigidbody> ().AddRelativeForce (transform.forward * power, ForceMode.Impulse);
-		}
+//		if (Input.GetButtonDown ("Jump")) {
+//		    GetComponent<Rigidbody> ().AddRelativeForce (transform.forward * power, ForceMode.Impulse);
+//		}
 	}
 }
