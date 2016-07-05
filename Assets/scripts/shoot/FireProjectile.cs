@@ -19,7 +19,7 @@ public class FireProjectile : MonoBehaviour {
     void FixedUpdate()
     {
         //TODO : need to set expiration for projectiles so they dissappear eventually
-        if (Input.GetMouseButtonDown(0))
+		if (Input.GetKey(KeyCode.Z))
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
@@ -34,7 +34,7 @@ public class FireProjectile : MonoBehaviour {
 			}
         }
 
-        if (Input.GetMouseButtonDown(1))
+		if (Input.GetKey(KeyCode.X))
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
