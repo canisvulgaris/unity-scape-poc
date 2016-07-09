@@ -10,6 +10,7 @@ public class TerrainController : MonoBehaviour {
     public GameObject _terrainParent;
     public GameObject _borderBlock;
     public GameObject _borderParent;
+	public Material _mainMaterial;
 
 
     public int _gridExponential = 10;
@@ -19,6 +20,7 @@ public class TerrainController : MonoBehaviour {
     public int _meshLimit = 16;
     public int _normalSmoothAngle = 60;
 
+	private Texture2D _mainTexture;
     private int _arrayIndex;
 	private int _arrayLength;
     private float _waveOffsetX;
@@ -54,6 +56,8 @@ public class TerrainController : MonoBehaviour {
 
         ClearTerrain();
         BuildTerrain();
+		_mainTexture = GenerateTexture (_arrayLength, _arrayLength);
+		_mainMaterial.SetTexture ("_MainTex", _mainTexture);
     }
 
     public void ClearTerrain()
@@ -95,7 +99,7 @@ public class TerrainController : MonoBehaviour {
         CalcTerrainHeightMap();
         AddBorder();
 
-        if (_objType.name == "mesh")
+        if (_objType.name == "terrainMesh")			
         {
             //Debug.Log("found mesh object");
             //set up the _positionArray height map using the Diamond-Square algorithm             
@@ -603,11 +607,31 @@ public class TerrainController : MonoBehaviour {
             }
         }
     }
+		
 
-    //	IEnumerator flashBlock(TerrainBlock block, float sec) {
-    //		yield return new WaitForSeconds (sec);
-    //		if (block.IsVisible) {
-    //			block.setColor (Color.red);
-    //		}
-    //	}
+	private Texture2D GenerateTexture(int width, int height){
+		float maxHeight = 20.0f;
+
+		Texture2D texture = new Texture2D(width, height);
+		Color[] colors = new Color[width * height];
+
+		//_positionArray
+
+		for (int x = 0; x < width; x++) {			
+			for (int y = 0; y < height; y++) {
+				float posHeight = _positionArray [x, y].y;
+				float posToColor = 0.0f;
+				if (posHeight < maxHeight) {
+					posToColor = (Mathf.Abs (posHeight) / maxHeight) * 100;
+				} else {
+					posToColor = 1.0f;
+				}
+				colors [(width * x) + y] = new Color (posToColor, posToColor, 1.0f);
+			}
+		}
+
+		texture.SetPixels (colors, 0);
+
+		return texture;
+	}
 }
