@@ -692,7 +692,10 @@ public class TerrainController : MonoBehaviour {
                     posToColor = 0.0f;
                 }
                 //Debug.Log("posHeight: " + posHeight + " - posToColor: " + posToColor);
-                colors[(width * x) + y] = new Color(posToColor, 0.5f, 0.0f);
+                float colorR = posToColor;
+                float colorG = 1.0f / posToColor;
+                float colorB = posToColor * 0.1f;
+                colors[(width * x) + y] = new Color(Mathf.Clamp(colorR, 0.3f, 0.7f), Mathf.Clamp(colorG, 0.2f, 0.5f), colorB);
             }
         }
 
