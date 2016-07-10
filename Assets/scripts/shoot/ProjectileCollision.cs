@@ -45,7 +45,6 @@ public class ProjectileCollision : MonoBehaviour
                     TerrainController terrainController = (TerrainController)terrainControllerObject.GetComponent<TerrainController>();
                     List<GameObject> localObjRef = terrainController.getObjRefArray();
                     int indexObjRef = localObjRef.IndexOf(hitColliders[i].gameObject);
-                    //Debug.Log("indexObjRef: " + indexObjRef);
 
                     int localArrayLength = terrainController.getArrayLength();
                     int localMeshLimit = terrainController._meshLimit;
@@ -53,11 +52,6 @@ public class ProjectileCollision : MonoBehaviour
                     int meshColorIndex = -1;
                     int meshRows = indexObjRef % meshTotalPerLength;
                     int meshCols = (int)Mathf.Floor((indexObjRef * 1.0f) / (meshTotalPerLength * 1.0f));
-
-                    //Debug.Log("localArrayLength: " + localArrayLength);
-                    //Debug.Log("localMeshLimit: " + localMeshLimit);
-                    //Debug.Log("meshTotalPerCol: " + meshTotalPerCol);
-                    //Debug.Log("meshRows: " + meshRows + " - meshCols: " + meshCols);
 
                     if (meshRows == 0)
                     {
@@ -75,8 +69,6 @@ public class ProjectileCollision : MonoBehaviour
                         }                        
                     }
 
-                    //Debug.Log("meshColorIndex: " + meshColorIndex);
-
                     if (verticesInBounds.Length > 0){
 						Vector3[] collisionMeshVertices = collisionMesh.vertices;
 
@@ -90,23 +82,28 @@ public class ProjectileCollision : MonoBehaviour
 							if (circleRadius > distanceToSphereCenter && collisionMeshVertices [verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y) {
 								collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, -1.0f * (circleRadius - distanceToSphereCenter));
 							}
+                            
+                            //update the color of vertices
+                            if (meshColorIndex > -1)
+                            {
+                                //TODO: update color of vertices to brown
+                                int vertexXIndex = (int)Mathf.Floor((verticesInBounds[j] * 1.0f) / (localMeshLimit * 1.0f));
+                                int vertexYIndex = (verticesInBounds[j] % (localMeshLimit + 1));
+                                int updateColorIndex = 0;
 
-                            //TODO: update color of vertices to brown
-                            int vertexColIndex = verticesInBounds[j] % localMeshLimit;
-                            int vertexRowIndex = (int)Mathf.Floor((verticesInBounds[j] * 1.0f) / (localMeshLimit * 1.0f));
+                                //terrainController.setMeshColorArray(meshColorIndex + localMeshLimit, Color.black);
 
-                            terrainController.setMeshColorArray(meshColorIndex, Color.black);
-
-                            //if (meshColorIndex > -1)
-                            //{
-                            //    if (verticesInBounds[j] > localMeshLimit)
-                            //    {
-                            //        terrainController.setMeshColorArray(meshColorIndex + 
-                            //            (((meshTotalPerLength - meshCols) * localMeshLimit + meshCols * localMeshLimit) * vertexRowIndex) +
-                            //            vertexColIndex
-                            //            , Color.black);
-                            //    }
-                            //}
+                                if (verticesInBounds[j] > localMeshLimit)
+                                {
+                                    updateColorIndex = meshColorIndex + (localArrayLength * vertexYIndex) + vertexXIndex;
+                                }
+                                else
+                                {
+                                    updateColorIndex = meshColorIndex + (localArrayLength * vertexYIndex);
+                                }
+                                terrainController.setMeshColorArray(updateColorIndex, Color.black);
+                                //Debug.Log("verticesInBounds[j]: " + verticesInBounds[j] + " - vertexXIndex: " + vertexXIndex + " - vertexYIndex: " + vertexYIndex + " - updateColorIndex: " + updateColorIndex);
+                            }
                         }
 
                         collisionMesh.vertices = collisionMeshVertices;
@@ -157,16 +154,17 @@ public class ProjectileCollision : MonoBehaviour
 
 		int[] matchedVerticesArray;
 		List<int> matchedVerticesList = new List<int>();
-		Color color = new Color (Random.value, Random.value, Random.value, 1.0f);
+        float colorValue = 0.0f;
 
 		for (int iter = 0; iter < collisionMesh.vertexCount; iter++) {
-			Vector3 convertedVertex = collider.transform.TransformPoint (collisionMesh.vertices [iter]);
+            Vector3 convertedVertex = collider.transform.TransformPoint (collisionMesh.vertices [iter]);
 
 			if (_explosionRadiusObj.GetComponent<SphereCollider>().bounds.Contains (convertedVertex)) {
-				Debug.DrawRay (convertedVertex, Vector3.up, color, 50.0f);
-				//Debug.Log ("matched vert - iter: " + iter + " - vector: " + collisionMesh.vertices [iter]);
-				matchedVerticesList.Add(iter);
-			}
+                Debug.DrawRay(convertedVertex, Vector3.up, new Color(colorValue, 0.0f, 0.0f), 50.0f);
+                //Debug.Log ("matched vert - iter: " + iter + " - vector: " + collisionMesh.vertices [iter]);                
+                matchedVerticesList.Add(iter);
+                colorValue += 0.1f;
+            }
 		}
 
 		matchedVerticesArray = matchedVerticesList.ToArray();
