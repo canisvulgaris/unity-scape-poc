@@ -634,6 +634,11 @@ public class TerrainController : MonoBehaviour {
         }
     }
 
+    /***************************************************************
+     * sets up the default terrain height params for min and max height
+     * based off the dynamic height map
+     * 
+    ***************************************************************/
     void SetTerrainHeightParameters()
     {
         for (int x = 0; x < _arrayLength; x++)
@@ -654,6 +659,10 @@ public class TerrainController : MonoBehaviour {
         }
     }
 
+    /***************************************************************
+     * generate colors based on the dynamic terrain 
+     * 
+    ***************************************************************/
     private Color[] GenerateColors(int width, int height) {
         //Debug.Log("called GenerateColors");
 
@@ -690,6 +699,10 @@ public class TerrainController : MonoBehaviour {
         return colors;
     }
 
+    /***************************************************************
+     * generate a texture based off a color height array
+     * 
+    ***************************************************************/
     private Texture2D GenerateTexture(Color[] colors, int width, int height)
     {
         //Debug.Log("called GenerateTexture");
@@ -701,6 +714,10 @@ public class TerrainController : MonoBehaviour {
         return texture;
     }
 
+    /***************************************************************
+     * rotate a color array by 90
+     * 
+    ***************************************************************/
     private Color[] RotateColors(Color[] inputArray, int width, int height)
     {
         Color[] rotatedArray = new Color[width * height];
@@ -716,6 +733,10 @@ public class TerrainController : MonoBehaviour {
         return rotatedArray;
     }
 
+    /***************************************************************
+     * flip the values of a color array
+     * 
+    ***************************************************************/
     private Color[] FlipColors(Color[] inputArray, int width, int height)
     {
         Color[] rotatedArray = new Color[width * height];
@@ -731,6 +752,11 @@ public class TerrainController : MonoBehaviour {
         return rotatedArray;
     }
 
+    /***************************************************************
+     * tied to the GUI button that rotates terrain texture and updates 
+     * mesh materials
+     * 
+    ***************************************************************/
     public void RotateTerrainTextureBy90()
     {
         _mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
