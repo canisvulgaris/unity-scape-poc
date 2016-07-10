@@ -37,6 +37,25 @@ public class TerrainController : MonoBehaviour {
     //private System.DateTime _startTime = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
     //private float _count = 0;
 
+    /***************************************************************
+    * update the color of a key in the mesh color array      
+    * 
+    ***************************************************************/
+    public void setMeshColorArray(int key, Color color)
+    {
+        _mainColors[key] = color;
+    }
+
+    public List<GameObject> getObjRefArray()
+    {
+        return _objRef;
+    }
+
+    public int getArrayLength()
+    {
+        return _arrayLength;
+    }
+
     /*************************************************************** 
      * Initialization
      * 
@@ -765,16 +784,7 @@ public class TerrainController : MonoBehaviour {
     {
         _mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
         updateTerrainTexture();
-        updateMeshMaterials();
-    }
-
-    /***************************************************************
-     * update the color of a key in the mesh color array      
-     * 
-    ***************************************************************/
-    public void updateMeshColorArray(int key, Color color)
-    {
-        _mainColors[key] = color;
+        updateAllMeshMaterials();
     }
 
     /***************************************************************
@@ -792,7 +802,7 @@ public class TerrainController : MonoBehaviour {
      * update all the material values for each mesh
      * 
     ***************************************************************/
-    public void updateMeshMaterials()
+    public void updateAllMeshMaterials()
     {
         int terrainIndex = 0;
 
@@ -813,5 +823,26 @@ public class TerrainController : MonoBehaviour {
                 terrainIndex++;
             }
         }
+    }
+
+    /***************************************************************
+     * update material values for a specific mesh
+     * 
+    ***************************************************************/
+    public void updateMeshMaterials(int terrainIndex, int startx, int starty)
+    {
+
+        Debug.Log("called updateMeshMaterials - terrainIndex: " + terrainIndex + " - startx: " + startx + " - starty: " + starty);
+        GameObject newMeshObj = _objRef[terrainIndex];
+        float terrainLength = (_arrayIndex * 1.0f) / (_meshLimit * 1.0f);
+
+        Material meshMaterial = new Material(_mainMaterial);
+        meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale / terrainLength, _mainMaterialScale / terrainLength));
+
+        //Debug.Log("startx: " + startx + " - starty: " + starty + "- _mainMaterialScale: " + _mainMaterialScale);
+        meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale / terrainLength, starty * _mainMaterialScale / terrainLength));
+        newMeshObj.GetComponent<Renderer>().material = null;
+        newMeshObj.GetComponent<Renderer>().material = meshMaterial;
+        terrainIndex++;
     }
 }

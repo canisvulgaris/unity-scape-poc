@@ -41,7 +41,37 @@ public class ProjectileCollision : MonoBehaviour
 					Mesh collisionMesh = hitColliders[i].GetComponent<MeshFilter> ().mesh;
 					int[] verticesInBounds = GetVerticesInBounds (hitColliders[i], collisionMesh);
 
-					if (verticesInBounds.Length > 0){
+                    GameObject terrainControllerObject = GameObject.Find("TerrainController");
+                    TerrainController terrainController = (TerrainController)terrainControllerObject.GetComponent<TerrainController>();
+                    List<GameObject> localObjRef = terrainController.getObjRefArray();
+                    int indexObjRef = localObjRef.IndexOf(hitColliders[i].gameObject);
+                    //Debug.Log("indexObjRef: " + indexObjRef);
+
+                    int localArrayLength = terrainController.getArrayLength();
+                    int localMeshLimit = terrainController._meshLimit;
+                    int meshTotalPerCol = (localArrayLength / localMeshLimit);
+                    int meshColorIndex = -1;
+                    int meshRows = (int)Mathf.Floor((indexObjRef * 1.0f) / (meshTotalPerCol * 1.0f));
+                    int meshColRemainder = indexObjRef % meshTotalPerCol;
+
+                    if (indexObjRef < meshTotalPerCol)
+                    {
+                        meshColorIndex = localMeshLimit * indexObjRef;
+                    }
+                    else
+                    {                       
+                        if (meshColRemainder == 0)
+                        {
+                            meshColorIndex = localArrayLength * localMeshLimit * meshRows;
+                        }
+                        else
+                        {
+                            meshColorIndex = (localArrayLength * localMeshLimit * meshRows) + (localMeshLimit * meshColRemainder);
+                        }                        
+                    }
+                    
+
+                    if (verticesInBounds.Length > 0){
 						Vector3[] collisionMeshVertices = collisionMesh.vertices;
 
 	                    float circleRadius = _areaOfEffectRadius * 0.6f;
@@ -56,15 +86,27 @@ public class ProjectileCollision : MonoBehaviour
 							}
 
                             //TODO: update color of vertices to brown
-                            
-
-						}
+                            if (meshColorIndex > -1)
+                            {
+                                terrainController.setMeshColorArray(meshColorIndex + verticesInBounds[j], Color.black);
+                            }
+                        }
 
 						collisionMesh.vertices = collisionMeshVertices;
 						MeshCollider collisionMeshCollider = hitColliders [i].GetComponent<MeshCollider> ();
 						collisionMeshCollider.sharedMesh = null;
 						collisionMeshCollider.sharedMesh = collisionMesh;
-					}
+
+                        terrainController.updateTerrainTexture();
+                        if (meshColRemainder == 0)
+                        {
+                            terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, 0);
+                        }
+                        else
+                        {
+                            terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, localMeshLimit * meshColRemainder);
+                        }
+                    }
 
 					//create debris
 					GetComponent<CreateDebris> ().createDebrisParticleSystem ();
