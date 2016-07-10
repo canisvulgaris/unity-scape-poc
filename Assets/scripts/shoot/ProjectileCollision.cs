@@ -19,6 +19,8 @@ public class ProjectileCollision : MonoBehaviour
             //decrease terrain height within radius of _explosionRadiusObj
             _projectileParent = GameObject.Find("ProjectileParent");
 
+            _areaOfEffectRadius += (Random.value * 6) - 3;
+
             CreateAreaOfEffectSphere();
 
             int terrainLayer = (1 << LayerMask.NameToLayer("Terrain")) | (1 << LayerMask.NameToLayer("PhysicsObject"));
