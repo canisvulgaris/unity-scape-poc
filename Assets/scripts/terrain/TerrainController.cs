@@ -11,6 +11,10 @@ public class TerrainController : MonoBehaviour {
     public GameObject _borderBlock;
     public GameObject _borderParent;
 	public Material _mainMaterial;
+    public float _mainMaterialScale = 0.0062f;
+
+    public float _terrainMaxHeight = 0.0f;
+    public float _terrainMinHeight = 0.0f;
 
 
     public int _gridExponential = 10;
@@ -97,6 +101,9 @@ public class TerrainController : MonoBehaviour {
         CalcTerrainHeightMap();
         AddBorder();
 
+        _mainTexture = GenerateTexture(_arrayLength, _arrayLength);
+        _mainMaterial.SetTexture("_MainTex", _mainTexture);
+
         if (_objType.name == "terrainMesh")			
         {
             //Debug.Log("found mesh object");
@@ -109,10 +116,7 @@ public class TerrainController : MonoBehaviour {
             //Debug.Log("found terrain object");
             _objArray = new TerrainObject[_arrayLength, _arrayLength];
             createPositionalTerrainUsingObject(_positionArray);
-        }
-        
-        _mainTexture = GenerateTexture(_arrayLength, _arrayLength);
-        _mainMaterial.SetTexture("_MainTex", _mainTexture);
+        }        
     }
 
     /***************************************************************
@@ -261,6 +265,11 @@ public class TerrainController : MonoBehaviour {
         newMeshObj.AddComponent<MeshCollider>();
         newMeshObj.transform.localScale = new Vector3(size, size, size);
         newMeshObj.transform.parent = _terrainParent.transform;
+
+        Material meshMaterial = new Material(_mainMaterial);
+        meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale, _mainMaterialScale));
+        meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale, starty * _mainMaterialScale));
+        newMeshObj.GetComponent<Renderer>().material = meshMaterial;
 
         //add to object ref array
         _objRef.Add(newMeshObj);
@@ -611,11 +620,12 @@ public class TerrainController : MonoBehaviour {
 		
 
 	private Texture2D GenerateTexture(int width, int height){
-        Debug.Log("called GenerateTexture");
+        //Debug.Log("called GenerateTexture");
 
-		float maxHeight = 10.0f;
+		float maxHeight = 30.0f;
+        float minHeight = -30.0f;
 
-		Texture2D texture = new Texture2D(width, height);
+        Texture2D texture = new Texture2D(width, height);
 		Color[] colors = new Color[width * height];
 
 		//_positionArray
@@ -623,14 +633,29 @@ public class TerrainController : MonoBehaviour {
 		for (int x = 0; x < width; x++) {			
 			for (int y = 0; y < height; y++) {
 				float posHeight = _positionArray [x, y].y;
-				float posToColor = 0.0f;
+
+                if (posHeight > _terrainMaxHeight || _terrainMaxHeight == 0.0f)
+                {
+                    _terrainMaxHeight = posHeight;
+                }
+                if (posHeight < _terrainMinHeight || _terrainMinHeight == 0.0f)
+                {
+                    _terrainMinHeight = posHeight;
+                }
+
+                float posToColor = 0.0f;
 				if (posHeight < maxHeight) {
-					posToColor = (Mathf.Abs(posHeight) / maxHeight);
+					posToColor = ((posHeight / maxHeight) * 0.5f) + 0.5f;
 				} else {
 					posToColor = 1.0f;
 				}
+
+                if (posHeight < minHeight)
+                {
+                    posToColor = 0.0f;
+                }
                 //Debug.Log("posHeight: " + posHeight + " - posToColor: " + posToColor);
-                colors [(width * x) + y] = new Color (posToColor, posToColor, posToColor);
+                colors [(width * x) + y] = new Color (posToColor, 0.5f, 0.0f);
 			}
 		}
 
