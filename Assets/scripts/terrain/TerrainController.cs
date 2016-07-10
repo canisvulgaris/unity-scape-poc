@@ -10,26 +10,27 @@ public class TerrainController : MonoBehaviour {
     public GameObject _terrainParent;
     public GameObject _borderBlock;
     public GameObject _borderParent;
-	public Material _mainMaterial;    
+    public Material _mainMaterial;
 
     public float _terrainMaxHeight = 0.0f;
     public float _terrainMinHeight = 0.0f;
 
 
     public int _gridExponential = 10;
-	public float _terrainRoughness = 0.08F;
+    public float _terrainRoughness = 0.08F;
     public float _terrainWave = 0.1F;
     public float _objSize = 1;
     public int _meshLimit = 16;
     public int _normalSmoothAngle = 60;
 
-	private Texture2D _mainTexture;
+    private Texture2D _mainTexture;
+    private Color[] _mainColors;
     private int _arrayIndex;
-	private int _arrayLength;
+    private int _arrayLength;
     private float _waveOffsetX;
     private float _waveOffsetY;
     private Vector3[,] _positionArray;
-	private TerrainObject[,] _objArray;
+    private TerrainObject[,] _objArray;
     private List<GameObject> _objRef;
     private float _mainMaterialScale;
 
@@ -40,7 +41,7 @@ public class TerrainController : MonoBehaviour {
      * Initialization
      * 
      ***************************************************************/
-    void Start () {
+    void Start() {
         //init
         BuildTerrain();
     }
@@ -59,7 +60,7 @@ public class TerrainController : MonoBehaviour {
         }
 
         ClearTerrain();
-        BuildTerrain();		
+        BuildTerrain();
     }
 
     public void ClearTerrain()
@@ -76,8 +77,12 @@ public class TerrainController : MonoBehaviour {
         for (var i = 0; i < _borderParent.transform.childCount; i++)
         {
             Destroy(_borderParent.transform.GetChild(i).gameObject);
-        }        
-    }
+        }
+
+        //reset values
+        _terrainMaxHeight = 0.0f;
+        _terrainMinHeight = 0.0f;
+}
 
     public void BuildTerrain()
     {
@@ -90,19 +95,22 @@ public class TerrainController : MonoBehaviour {
         {
             Debug.LogError("TerrainController - _objType not set");
         }
-        
+
         //set up initial params
         _arrayIndex = (int)Mathf.Pow(2, _gridExponential);
         _arrayLength = _arrayIndex + 1;
         _positionArray = new Vector3[_arrayLength, _arrayLength];
         _waveOffsetX = Random.value * _arrayIndex * 2 - _arrayIndex;
         _waveOffsetY = Random.value * _arrayIndex * 2 - _arrayIndex;
-        _mainMaterialScale = 1.0f / (_meshLimit * 1.0f);
+        _mainMaterialScale = 1.0f / (_meshLimit * 1.0f);        
 
         CalcTerrainHeightMap();
         AddBorder();
 
-        _mainTexture = GenerateTexture(_arrayLength, _arrayLength);
+        SetTerrainHeightParameters();
+        _mainColors = new Color[_arrayLength * _arrayLength];
+        _mainColors = GenerateColors(_arrayLength, _arrayLength);
+        _mainTexture = GenerateTexture(_mainColors, _arrayLength, _arrayLength);
         _mainMaterial.SetTexture("_MainTex", _mainTexture);
 
         if (_objType.name == "terrainMesh")
@@ -131,7 +139,7 @@ public class TerrainController : MonoBehaviour {
         float borderHeight = 64;
         float borderWidth = 2;
 
-        GameObject borderN = Instantiate(_borderBlock, new Vector3(0, 0, _arrayIndex/2), Quaternion.identity) as GameObject;
+        GameObject borderN = Instantiate(_borderBlock, new Vector3(0, 0, _arrayIndex / 2), Quaternion.identity) as GameObject;
         borderN.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
         borderN.transform.parent = _borderParent.transform;
 
@@ -139,13 +147,13 @@ public class TerrainController : MonoBehaviour {
         borderE.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
         borderE.transform.parent = _borderParent.transform;
 
-		GameObject borderS = Instantiate(_borderBlock, new Vector3(_arrayIndex, 0, _arrayIndex / 2), Quaternion.identity) as GameObject;
-      	borderS.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
-      	borderS.transform.parent = _borderParent.transform;
+        GameObject borderS = Instantiate(_borderBlock, new Vector3(_arrayIndex, 0, _arrayIndex / 2), Quaternion.identity) as GameObject;
+        borderS.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
+        borderS.transform.parent = _borderParent.transform;
 
-//        GameObject borderW = Instantiate(_borderBlock, new Vector3(_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
-//        borderW.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
-//        borderW.transform.parent = _borderParent.transform;
+        //        GameObject borderW = Instantiate(_borderBlock, new Vector3(_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
+        //        borderW.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
+        //        borderW.transform.parent = _borderParent.transform;
 
     }
 
@@ -234,14 +242,14 @@ public class TerrainController : MonoBehaviour {
             for (int y = 0; y < length - 1; y++)
             {
                 //add in first three vertices for mesh
-				meshTriangles[tri_index] = (x * length) + y + 1;
+                meshTriangles[tri_index] = (x * length) + y + 1;
                 meshTriangles[tri_index + 1] = ((x + 1) * length) + y;
-				meshTriangles[tri_index + 2] = (x * length) + y;
+                meshTriangles[tri_index + 2] = (x * length) + y;
 
                 //add in second three vertices for mesh
-				meshTriangles[tri_index + 3] = (x * length) + y + 1;
+                meshTriangles[tri_index + 3] = (x * length) + y + 1;
                 meshTriangles[tri_index + 4] = ((x + 1) * length) + y + 1;
-				meshTriangles[tri_index + 5] = ((x + 1) * length) + y;
+                meshTriangles[tri_index + 5] = ((x + 1) * length) + y;
 
                 //bump index by 6 for previous puts
                 tri_index += 6;
@@ -250,7 +258,7 @@ public class TerrainController : MonoBehaviour {
 
         //Debug.Log("about to calc normals");
 
-        mesh.name = "terrain-" + length + "-"+ startx + "-" + starty;
+        mesh.name = "terrain-" + length + "-" + startx + "-" + starty;
         mesh.Clear();
         mesh.vertices = meshVertices;
         mesh.uv = meshUV;
@@ -271,10 +279,10 @@ public class TerrainController : MonoBehaviour {
         float terrainLength = (_arrayIndex * 1.0f) / (_meshLimit * 1.0f);
 
         Material meshMaterial = new Material(_mainMaterial);
-        meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale/terrainLength, _mainMaterialScale/terrainLength));
+        meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale / terrainLength, _mainMaterialScale / terrainLength));
 
-        Debug.Log("startx: " + startx + " - starty: " + starty +  "- _mainMaterialScale: " + _mainMaterialScale);
-        meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale/terrainLength, starty * _mainMaterialScale/terrainLength));
+        Debug.Log("startx: " + startx + " - starty: " + starty + "- _mainMaterialScale: " + _mainMaterialScale);
+        meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale / terrainLength, starty * _mainMaterialScale / terrainLength));
         newMeshObj.GetComponent<Renderer>().material = meshMaterial;
 
         //add to object ref array
@@ -289,65 +297,65 @@ public class TerrainController : MonoBehaviour {
      * 
      ****************************************************************/
     void createFlatTerrainUsingObject() {
-		int length = _arrayLength;
+        int length = _arrayLength;
 
-		for (int i = 0; i < length; i++) {
-			for (int j = 0; j < length; j++) {
-				Vector3 pos = new Vector3(i, 0, j);
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                Vector3 pos = new Vector3(i, 0, j);
                 TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize, _terrainParent);
                 _objArray[i, j] = obj;
-			}
-		}
-	}
+            }
+        }
+    }
 
     /***************************************************************
      * Generate a terrain based on position array using TerrainObject
      * 
      ****************************************************************/
     void createPositionalTerrainUsingObject(Vector3[,] posArray) {
-		int length = _arrayLength;
+        int length = _arrayLength;
 
-		for (int i = 0; i < length; i++) {
-			for (int j = 0; j < length; j++) {
-				Vector3 pos = posArray [i, j];
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                Vector3 pos = posArray[i, j];
                 TerrainObject obj = new TerrainObject(_objType, pos * _objSize, _objSize, _terrainParent);
                 _objArray[i, j] = obj;
             }
-		}
-	}
+        }
+    }
 
     /***************************************************************
     * update existing positional terrain using TerrainObject
     * 
     ****************************************************************/
     void updateDynamicTerrainUsingObject(Vector3[,] posArray) {
-		int length = _arrayLength;
+        int length = _arrayLength;
 
-		for (int i = 0; i < length; i++) {
-			for (int j = 0; j < length; j++) {
-				Vector3 pos = posArray[i, j];
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                Vector3 pos = posArray[i, j];
                 _objArray[i, j].ObjectPosition = pos * _objSize;
-			}
-		}
-	}
+            }
+        }
+    }
 
     /***************************************************************
     * update the position of a TerrainObject
     * 
     ****************************************************************/
     void updateObjectPosition(int i, int j, Vector3 pos) {
-        _objArray[i, j].ObjectPosition = pos * _objSize;	
-	}
+        _objArray[i, j].ObjectPosition = pos * _objSize;
+    }
 
     /***************************************************************
     * move a TerrainObject with after delay
     * 
     ****************************************************************/
     IEnumerator moveObject(int i, int j, Vector3 pos, float sec) {
-		yield return new WaitForSeconds (sec);
+        yield return new WaitForSeconds(sec);
         updateObjectPosition(i, j, pos);
-        _objArray[i, j].setColor (new Color(0, 0.75F + (Random.value/4), 0));
-	}
+        _objArray[i, j].setColor(new Color(0, 0.75F + (Random.value / 4), 0));
+    }
 
     /***************************************************************
     * update the edge points to match each other so they can map infinitely
@@ -355,15 +363,15 @@ public class TerrainController : MonoBehaviour {
     ****************************************************************/
     void normalizeBoundaries()
     {
-        for (int i = 1; i < _arrayLength-1; i++)
+        for (int i = 1; i < _arrayLength - 1; i++)
         {
             //update X coords
-            float avgX = (_positionArray[i, 0].y + _positionArray[i, _arrayLength - 1].y)/2;
+            float avgX = (_positionArray[i, 0].y + _positionArray[i, _arrayLength - 1].y) / 2;
             _positionArray[i, 0].y = avgX;
             _positionArray[i, _arrayLength - 1].y = avgX;
 
             //update Y coords
-            float avgY = (_positionArray[0, i].y + _positionArray[_arrayLength - 1, i].y)/2;
+            float avgY = (_positionArray[0, i].y + _positionArray[_arrayLength - 1, i].y) / 2;
             _positionArray[0, i].y = avgY;
             _positionArray[_arrayLength - 1, i].y = avgY;
         }
@@ -433,8 +441,8 @@ public class TerrainController : MonoBehaviour {
 
         int objCount = _objRef.Count;
         int mainObjIndex = _objRef.IndexOf(mainObj);
-        int terrainLength = _arrayIndex/_meshLimit;
-        
+        int terrainLength = _arrayIndex / _meshLimit;
+
         if (x == 0 && y == _meshLimit)
         {
             int northObjIndex = mainObjIndex + 1;
@@ -475,7 +483,7 @@ public class TerrainController : MonoBehaviour {
         }
         else if (x == _meshLimit && y == 0)
         {
-            int westObjIndex = mainObjIndex + terrainLength;                      
+            int westObjIndex = mainObjIndex + terrainLength;
             if (westObjIndex >= objCount)
             {
                 return;
@@ -517,50 +525,50 @@ public class TerrainController : MonoBehaviour {
     * update the positional array using the Diamond Square Algorithim
     * 
     ****************************************************************/
-    void updatePositionUsingDiamondSquare() {	
-		int size = _arrayIndex;
-		int length = _arrayLength;
-		float roughness = _terrainRoughness;
+    void updatePositionUsingDiamondSquare() {
+        int size = _arrayIndex;
+        int length = _arrayLength;
+        float roughness = _terrainRoughness;
 
-		//set default corners
-		_positionArray [0, 0] = Vector3.zero;
-		_positionArray [size, 0] = new Vector3 (size, 0.0f, 0.0f);
-		_positionArray [0, size] = new Vector3 (0.0f, 0.0f, size);
-		_positionArray [size, size] = new Vector3 (size, 0.0f, size);
+        //set default corners
+        _positionArray[0, 0] = Vector3.zero;
+        _positionArray[size, 0] = new Vector3(size, 0.0f, 0.0f);
+        _positionArray[0, size] = new Vector3(0.0f, 0.0f, size);
+        _positionArray[size, size] = new Vector3(size, 0.0f, size);
 
-		split (size, roughness, length);
-	}
+        split(size, roughness, length);
+    }
 
     /***************************************************************
     * Diamond Square Algorithim recursive function 
     * 
     ****************************************************************/
     void split(int size, float roughness, int full) {
-		//Debug.Log ("split() params size: " + size + " roughness: " + roughness + " full: " + full	);
-		int half = size / 2;
-		//float scale = roughness * _blockSize;
-		float scale = roughness * size;
+        //Debug.Log ("split() params size: " + size + " roughness: " + roughness + " full: " + full	);
+        int half = size / 2;
+        //float scale = roughness * _blockSize;
+        float scale = roughness * size;
 
-		if (half < 1) {
-			return;
-		}
+        if (half < 1) {
+            return;
+        }
 
-		for (int y = half; y < full; y += size) {
-			for (int x = half; x < full; x += size) {
+        for (int y = half; y < full; y += size) {
+            for (int x = half; x < full; x += size) {
                 float rand = Random.value * scale * 2 - scale;
-                square (x, y, half, rand, full);
-			}
-		}
+                square(x, y, half, rand, full);
+            }
+        }
 
-		for (int y = 0; y < full; y += half) {
-			for (int x = (y + half) % size; x < full; x += size) {
+        for (int y = 0; y < full; y += half) {
+            for (int x = (y + half) % size; x < full; x += size) {
                 float rand = Random.value * scale * 2 - scale;
-                diamond (x, y, half, rand, full);
-			}
-		}
+                diamond(x, y, half, rand, full);
+            }
+        }
 
-		split (half, roughness, full);
-	}
+        split(half, roughness, full);
+    }
 
     /***************************************************************
     * Diamond Square Algorithim recursive function 
@@ -575,13 +583,13 @@ public class TerrainController : MonoBehaviour {
         var yRand = Random.value * roughness * 2 - roughness;
 
 
-        float d1 = (y - half) >= 0 ? _positionArray [x, (y - half)].y : 0;
-		float d2 = (x + half) < full ? _positionArray [(x + half), y].y : 0;
-		float d3 = (y + half) < full ? _positionArray [x, (y + half)].y : 0;
-		float d4 = ((x - half) >= 0) ? _positionArray [(x - half), y].y : 0;
+        float d1 = (y - half) >= 0 ? _positionArray[x, (y - half)].y : 0;
+        float d2 = (x + half) < full ? _positionArray[(x + half), y].y : 0;
+        float d3 = (y + half) < full ? _positionArray[x, (y + half)].y : 0;
+        float d4 = ((x - half) >= 0) ? _positionArray[(x - half), y].y : 0;
 
-		float average = ( d1 + d2 + d3 + d4 ) / 4;
-		_positionArray [x, y] = new Vector3 (x + xRand, average + offsetValue, y + yRand);
+        float average = (d1 + d2 + d3 + d4) / 4;
+        _positionArray[x, y] = new Vector3(x + xRand, average + offsetValue, y + yRand);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
@@ -598,13 +606,13 @@ public class TerrainController : MonoBehaviour {
         var xRand = Random.value * roughness * 2 - roughness;
         var yRand = Random.value * roughness * 2 - roughness;
 
-        float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray [(x - half), (y - half)].y : 0;
-		float s2 = ((y - half) >= 0 || (x + half) < full) ? _positionArray [(x + half), (y - half)].y : 0;
-		float s3 = ((x + half) < full || (y + half) < full) ? _positionArray [(x + half), (y + half)].y : 0;
-		float s4 = ((x - half) >= 0 || (y + half) < full) ? _positionArray [(x - half), (y + half)].y : 0;
+        float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray[(x - half), (y - half)].y : 0;
+        float s2 = ((y - half) >= 0 || (x + half) < full) ? _positionArray[(x + half), (y - half)].y : 0;
+        float s3 = ((x + half) < full || (y + half) < full) ? _positionArray[(x + half), (y + half)].y : 0;
+        float s4 = ((x - half) >= 0 || (y + half) < full) ? _positionArray[(x - half), (y + half)].y : 0;
 
-		float average = ( s1 + s2 + s3 + s4 ) / 4;
-		_positionArray [x, y] = new Vector3 (x + xRand, average + offsetValue, y + yRand);
+        float average = (s1 + s2 + s3 + s4) / 4;
+        _positionArray[x, y] = new Vector3(x + xRand, average + offsetValue, y + yRand);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
@@ -623,17 +631,12 @@ public class TerrainController : MonoBehaviour {
             }
         }
     }
-		
 
-	private Texture2D GenerateTexture(int width, int height){
-        //Debug.Log("called GenerateTexture");
-
-        Texture2D texture = new Texture2D(width, height);
-		Color[] colors = new Color[width * height];
-
-        for (int x = 0; x < width; x++)
+    void SetTerrainHeightParameters()
+    {
+        for (int x = 0; x < _arrayLength; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < _arrayLength; y++)
             {
                 float posHeight = _positionArray[x, y].y;
 
@@ -647,41 +650,56 @@ public class TerrainController : MonoBehaviour {
                 }
             }
         }
+    }
+
+    private Color[] GenerateColors(int width, int height) {
+        //Debug.Log("called GenerateColors");
+
+        Color[] colors = new Color[width * height];
+
+        if (_terrainMaxHeight == 0.0f && _terrainMinHeight == 0.0f)
+        {
+            Debug.LogError("Terrain Min and Max need to be set before calling generate texture");
+        }
 
         float maxHeight = _terrainMaxHeight;
         float minHeight = _terrainMinHeight;
         float heightDiff = maxHeight - minHeight;
 
-        for (int x = 0; x < width; x++) {			
-			for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 float posHeight = _positionArray[x, y].y;
                 float posToColor = 0.0f;
-				if (posHeight < maxHeight) {
-					posToColor = ((posHeight - minHeight) / heightDiff);
-				} else {
-					posToColor = 1.0f;
-				}
+                if (posHeight < maxHeight) {
+                    posToColor = ((posHeight - minHeight) / heightDiff);
+                } else {
+                    posToColor = 1.0f;
+                }
 
                 if (posHeight < minHeight)
                 {
                     posToColor = 0.0f;
                 }
                 //Debug.Log("posHeight: " + posHeight + " - posToColor: " + posToColor);
-                colors [(width * x) + y] = new Color (posToColor, 0.5f, 0.0f);
-			}
-		}
+                colors[(width * x) + y] = new Color(posToColor, 0.5f, 0.0f);
+            }
+        }
 
-        //colors = RotateTextureColors(colors, width, height);
+        return colors;
+    }
 
-
-        texture.SetPixels (colors, 0);
+    private Texture2D GenerateTexture(Color[] colors, int width, int height)
+    {
+        //Debug.Log("called GenerateTexture");
+        Texture2D texture = new Texture2D(width, height);
+        texture.SetPixels(colors, 0);
         texture.wrapMode = TextureWrapMode.Clamp;
         texture.Apply();
 
         return texture;
-	}
+    }
 
-    Color[] RotateTextureColors(Color[] inputArray, int width, int height)
+    private Color[] RotateColors(Color[] inputArray, int width, int height)
     {
         Color[] rotatedArray = new Color[width * height];
 
@@ -695,4 +713,27 @@ public class TerrainController : MonoBehaviour {
 
         return rotatedArray;
     }
+
+    //void RotateTerrainTextureBy90() {
+
+    //    _mainTexture = GenerateTexture(_arrayLength, _arrayLength);
+    //    _mainMaterial.SetTexture("_MainTex", _mainTexture);
+
+    //    for (int startx = 0; startx < _arrayIndex; startx += _meshLimit)
+    //    {
+    //        for (int starty = 0; starty < _arrayIndex; starty += _meshLimit)
+    //        {
+    //            GameObject newMeshObj = _objRef[startx + starty];
+
+    //            float terrainLength = (_arrayIndex * 1.0f) / (_meshLimit * 1.0f);
+
+    //            Material meshMaterial = new Material(_mainMaterial);
+    //            meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale / terrainLength, _mainMaterialScale / terrainLength));
+
+    //            Debug.Log("startx: " + startx + " - starty: " + starty + "- _mainMaterialScale: " + _mainMaterialScale);
+    //            meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale / terrainLength, starty * _mainMaterialScale / terrainLength));
+    //            newMeshObj.GetComponent<Renderer>().material = meshMaterial;               
+    //        }
+    //    }
+    //}
 }
