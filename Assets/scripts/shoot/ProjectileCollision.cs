@@ -52,7 +52,13 @@ public class ProjectileCollision : MonoBehaviour
                     int meshTotalPerCol = (localArrayLength / localMeshLimit);
                     int meshColorIndex = -1;
                     int meshRows = (int)Mathf.Floor((indexObjRef * 1.0f) / (meshTotalPerCol * 1.0f));
-                    int meshColRemainder = indexObjRef % meshTotalPerCol;
+                    int meshCols = indexObjRef % meshTotalPerCol;
+
+                    //Debug.Log("localArrayLength: " + localArrayLength);
+                    //Debug.Log("localMeshLimit: " + localMeshLimit);
+                    //Debug.Log("meshTotalPerCol: " + meshTotalPerCol);
+                    Debug.Log("meshRows: " + meshRows);
+                    Debug.Log("meshCols: " + meshCols);
 
                     if (indexObjRef < meshTotalPerCol)
                     {
@@ -60,16 +66,17 @@ public class ProjectileCollision : MonoBehaviour
                     }
                     else
                     {                       
-                        if (meshColRemainder == 0)
+                        if (meshCols == 0)
                         {
                             meshColorIndex = localArrayLength * localMeshLimit * meshRows;
                         }
                         else
                         {
-                            meshColorIndex = (localArrayLength * localMeshLimit * meshRows) + (localMeshLimit * meshColRemainder);
+                            meshColorIndex = (localArrayLength * localMeshLimit * meshRows) + (localMeshLimit * meshCols);
                         }                        
                     }
-                    
+
+                    Debug.Log("meshColorIndex: " + meshColorIndex);
 
                     if (verticesInBounds.Length > 0){
 						Vector3[] collisionMeshVertices = collisionMesh.vertices;
@@ -86,30 +93,42 @@ public class ProjectileCollision : MonoBehaviour
 							}
 
                             //TODO: update color of vertices to brown
-                            if (meshColorIndex > -1)
-                            {
-                                terrainController.setMeshColorArray(meshColorIndex + verticesInBounds[j], Color.black);
-                            }
+                            int vertexColIndex = verticesInBounds[j] % localMeshLimit;
+                            int vertexRowIndex = (int)Mathf.Floor((verticesInBounds[j] * 1.0f) / (localMeshLimit * 1.0f));
+
+                            terrainController.setMeshColorArray(meshColorIndex, Color.black);
+
+                            //if (meshColorIndex > -1)
+                            //{
+                            //    if (verticesInBounds[j] > localMeshLimit)
+                            //    {
+                            //        terrainController.setMeshColorArray(meshColorIndex + 
+                            //            (((meshTotalPerCol - meshCols) * localMeshLimit + meshCols * localMeshLimit) * vertexRowIndex) +
+                            //            vertexColIndex
+                            //            , Color.black);
+                            //    }
+                            //}
                         }
 
-						collisionMesh.vertices = collisionMeshVertices;
+                        collisionMesh.vertices = collisionMeshVertices;
 						MeshCollider collisionMeshCollider = hitColliders [i].GetComponent<MeshCollider> ();
 						collisionMeshCollider.sharedMesh = null;
 						collisionMeshCollider.sharedMesh = collisionMesh;
 
                         terrainController.updateTerrainTexture();
-                        if (meshColRemainder == 0)
-                        {
-                            terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, 0);
-                        }
-                        else
-                        {
-                            terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, localMeshLimit * meshColRemainder);
-                        }
+                        terrainController.updateAllMeshMaterials();
+                        //if (meshColRemainder == 0)
+                        //{
+                        //    terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, 0);
+                        //}
+                        //else
+                        //{
+                        //    terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, localMeshLimit * meshCols);
+                        //}
                     }
 
-					//create debris
-					GetComponent<CreateDebris> ().createDebrisParticleSystem ();
+                    //create debris
+                    GetComponent<CreateDebris> ().createDebrisParticleSystem ();
 				}
 
 				if (hitColliders[i].tag == "PhysicsObject") {
@@ -140,13 +159,13 @@ public class ProjectileCollision : MonoBehaviour
 
 		int[] matchedVerticesArray;
 		List<int> matchedVerticesList = new List<int>();
-		//Color color = new Color (Random.value, Random.value, Random.value, 1.0f);
+		Color color = new Color (Random.value, Random.value, Random.value, 1.0f);
 
 		for (int iter = 0; iter < collisionMesh.vertexCount; iter++) {
 			Vector3 convertedVertex = collider.transform.TransformPoint (collisionMesh.vertices [iter]);
 
 			if (_explosionRadiusObj.GetComponent<SphereCollider>().bounds.Contains (convertedVertex)) {
-				//Debug.DrawRay (convertedVertex, Vector3.up, color, 50.0f);
+				Debug.DrawRay (convertedVertex, Vector3.up, color, 50.0f);
 				//Debug.Log ("matched vert - iter: " + iter + " - vector: " + collisionMesh.vertices [iter]);
 				matchedVerticesList.Add(iter);
 			}
