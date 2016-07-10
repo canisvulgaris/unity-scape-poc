@@ -43,6 +43,7 @@ public class TerrainController : MonoBehaviour {
     ***************************************************************/
     public void setMeshColorArray(int key, Color color)
     {
+        //Debug.Log("called setMeshColorArray - key: " + key + " - color: " + color);
         _mainColors[key] = color;
     }
 
@@ -131,8 +132,8 @@ public class TerrainController : MonoBehaviour {
         SetTerrainHeightParameters();
         _mainColors = new Color[_arrayLength * _arrayLength];
         _mainColors = GenerateColors(_arrayLength, _arrayLength);
-        _mainColors = FlipColors(_mainColors, _arrayLength, _arrayLength);
-        _mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
+        //_mainColors = FlipColors(_mainColors, _arrayLength, _arrayLength);
+        //_mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
         updateTerrainTexture();
 
         if (_objType.name == "terrainMesh")
@@ -715,7 +716,7 @@ public class TerrainController : MonoBehaviour {
                 float colorR = posToColor;
                 float colorG = 1.0f / posToColor;
                 float colorB = posToColor * 0.1f;
-                colors[(width * x) + y] = new Color(Mathf.Clamp(colorR, 0.3f, 0.7f), Mathf.Clamp(colorG, 0.2f, 0.5f), colorB);
+                colors[(width * y) + x] = new Color(Mathf.Clamp(colorR, 0.3f, 0.7f), Mathf.Clamp(colorG, 0.2f, 0.5f), colorB);
             }
         }
 
@@ -832,7 +833,7 @@ public class TerrainController : MonoBehaviour {
     public void updateMeshMaterials(int terrainIndex, int startx, int starty)
     {
 
-        Debug.Log("called updateMeshMaterials - terrainIndex: " + terrainIndex + " - startx: " + startx + " - starty: " + starty);
+        //Debug.Log("called updateMeshMaterials - terrainIndex: " + terrainIndex + " - startx: " + startx + " - starty: " + starty);
         GameObject newMeshObj = _objRef[terrainIndex];
         float terrainLength = (_arrayIndex * 1.0f) / (_meshLimit * 1.0f);
 
