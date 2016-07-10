@@ -110,6 +110,8 @@ public class TerrainController : MonoBehaviour {
         SetTerrainHeightParameters();
         _mainColors = new Color[_arrayLength * _arrayLength];
         _mainColors = GenerateColors(_arrayLength, _arrayLength);
+        _mainColors = FlipColors(_mainColors, _arrayLength, _arrayLength);
+        _mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
         _mainTexture = GenerateTexture(_mainColors, _arrayLength, _arrayLength);
         _mainMaterial.SetTexture("_MainTex", _mainTexture);
 
@@ -281,7 +283,7 @@ public class TerrainController : MonoBehaviour {
         Material meshMaterial = new Material(_mainMaterial);
         meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale / terrainLength, _mainMaterialScale / terrainLength));
 
-        Debug.Log("startx: " + startx + " - starty: " + starty + "- _mainMaterialScale: " + _mainMaterialScale);
+        //Debug.Log("startx: " + startx + " - starty: " + starty + "- _mainMaterialScale: " + _mainMaterialScale);
         meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale / terrainLength, starty * _mainMaterialScale / terrainLength));
         newMeshObj.GetComponent<Renderer>().material = meshMaterial;
 
@@ -714,26 +716,45 @@ public class TerrainController : MonoBehaviour {
         return rotatedArray;
     }
 
-    //void RotateTerrainTextureBy90() {
+    private Color[] FlipColors(Color[] inputArray, int width, int height)
+    {
+        Color[] rotatedArray = new Color[width * height];
 
-    //    _mainTexture = GenerateTexture(_arrayLength, _arrayLength);
-    //    _mainMaterial.SetTexture("_MainTex", _mainTexture);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                rotatedArray[x * width + y] = inputArray[((width - x -1) * height) + y];
+            }
+        }
 
-    //    for (int startx = 0; startx < _arrayIndex; startx += _meshLimit)
-    //    {
-    //        for (int starty = 0; starty < _arrayIndex; starty += _meshLimit)
-    //        {
-    //            GameObject newMeshObj = _objRef[startx + starty];
+        return rotatedArray;
+    }
 
-    //            float terrainLength = (_arrayIndex * 1.0f) / (_meshLimit * 1.0f);
+    public void RotateTerrainTextureBy90()
+    {
+        _mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
+        _mainTexture = GenerateTexture(_mainColors, _arrayLength, _arrayLength);
+        _mainMaterial.SetTexture("_MainTex", _mainTexture);
 
-    //            Material meshMaterial = new Material(_mainMaterial);
-    //            meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale / terrainLength, _mainMaterialScale / terrainLength));
+        int terrainIndex = 0;
 
-    //            Debug.Log("startx: " + startx + " - starty: " + starty + "- _mainMaterialScale: " + _mainMaterialScale);
-    //            meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale / terrainLength, starty * _mainMaterialScale / terrainLength));
-    //            newMeshObj.GetComponent<Renderer>().material = meshMaterial;               
-    //        }
-    //    }
-    //}
+        for (int startx = 0; startx < _arrayIndex; startx += _meshLimit)
+        {            
+            for (int starty = 0; starty < _arrayIndex; starty += _meshLimit)
+            {
+                GameObject newMeshObj = _objRef[terrainIndex];
+                float terrainLength = (_arrayIndex * 1.0f) / (_meshLimit * 1.0f);
+
+                Material meshMaterial = new Material(_mainMaterial);
+                meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale / terrainLength, _mainMaterialScale / terrainLength));
+
+                //Debug.Log("startx: " + startx + " - starty: " + starty + "- _mainMaterialScale: " + _mainMaterialScale);
+                meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale / terrainLength, starty * _mainMaterialScale / terrainLength));
+                newMeshObj.GetComponent<Renderer>().material = null;
+                newMeshObj.GetComponent<Renderer>().material = meshMaterial;
+                terrainIndex++;
+            }
+        }
+    }
 }

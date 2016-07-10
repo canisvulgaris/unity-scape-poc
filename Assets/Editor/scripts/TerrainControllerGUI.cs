@@ -15,6 +15,11 @@ public class TerrainControllerGUI : Editor
         {
             terrainController.RefreshTerrain();
         }
+
+        if (GUILayout.Button("Rotate Texture By 90"))
+        {
+            terrainController.RotateTerrainTextureBy90();
+        }
     }
 }
 
