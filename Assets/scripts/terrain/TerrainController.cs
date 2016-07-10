@@ -55,9 +55,7 @@ public class TerrainController : MonoBehaviour {
         }
 
         ClearTerrain();
-        BuildTerrain();
-		_mainTexture = GenerateTexture (_arrayLength, _arrayLength);
-		_mainMaterial.mainTexture = _mainTexture;
+        BuildTerrain();		
     }
 
     public void ClearTerrain()
@@ -112,6 +110,9 @@ public class TerrainController : MonoBehaviour {
             _objArray = new TerrainObject[_arrayLength, _arrayLength];
             createPositionalTerrainUsingObject(_positionArray);
         }
+        
+        _mainTexture = GenerateTexture(_arrayLength, _arrayLength);
+        _mainMaterial.SetTexture("_MainTex", _mainTexture);
     }
 
     /***************************************************************
@@ -610,7 +611,9 @@ public class TerrainController : MonoBehaviour {
 		
 
 	private Texture2D GenerateTexture(int width, int height){
-		float maxHeight = 20.0f;
+        Debug.Log("called GenerateTexture");
+
+		float maxHeight = 10.0f;
 
 		Texture2D texture = new Texture2D(width, height);
 		Color[] colors = new Color[width * height];
@@ -622,16 +625,20 @@ public class TerrainController : MonoBehaviour {
 				float posHeight = _positionArray [x, y].y;
 				float posToColor = 0.0f;
 				if (posHeight < maxHeight) {
-					posToColor = (Mathf.Abs (posHeight) / maxHeight) * 100;
+					posToColor = (Mathf.Abs(posHeight) / maxHeight);
 				} else {
 					posToColor = 1.0f;
 				}
-				colors [(width * x) + y] = new Color (posToColor, posToColor, 1.0f);
+                //Debug.Log("posHeight: " + posHeight + " - posToColor: " + posToColor);
+                colors [(width * x) + y] = new Color (posToColor, posToColor, posToColor);
 			}
 		}
 
 		texture.SetPixels (colors, 0);
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.Apply();
 
-		return texture;
+
+        return texture;
 	}
 }
