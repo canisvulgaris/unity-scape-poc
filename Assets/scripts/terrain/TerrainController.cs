@@ -10,8 +10,7 @@ public class TerrainController : MonoBehaviour {
     public GameObject _terrainParent;
     public GameObject _borderBlock;
     public GameObject _borderParent;
-	public Material _mainMaterial;
-    public float _mainMaterialScale = 0.0062f;
+	public Material _mainMaterial;    
 
     public float _terrainMaxHeight = 0.0f;
     public float _terrainMinHeight = 0.0f;
@@ -32,6 +31,7 @@ public class TerrainController : MonoBehaviour {
     private Vector3[,] _positionArray;
 	private TerrainObject[,] _objArray;
     private List<GameObject> _objRef;
+    private float _mainMaterialScale;
 
     //private System.DateTime _startTime = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
     //private float _count = 0;
@@ -97,6 +97,7 @@ public class TerrainController : MonoBehaviour {
         _positionArray = new Vector3[_arrayLength, _arrayLength];
         _waveOffsetX = Random.value * _arrayIndex * 2 - _arrayIndex;
         _waveOffsetY = Random.value * _arrayIndex * 2 - _arrayIndex;
+        _mainMaterialScale = 1.0f / (_meshLimit * 1.0f);
 
         CalcTerrainHeightMap();
         AddBorder();
@@ -104,7 +105,7 @@ public class TerrainController : MonoBehaviour {
         _mainTexture = GenerateTexture(_arrayLength, _arrayLength);
         _mainMaterial.SetTexture("_MainTex", _mainTexture);
 
-        if (_objType.name == "terrainMesh")			
+        if (_objType.name == "terrainMesh")
         {
             //Debug.Log("found mesh object");
             //set up the _positionArray height map using the Diamond-Square algorithm             
@@ -116,7 +117,8 @@ public class TerrainController : MonoBehaviour {
             //Debug.Log("found terrain object");
             _objArray = new TerrainObject[_arrayLength, _arrayLength];
             createPositionalTerrainUsingObject(_positionArray);
-        }        
+        }
+
     }
 
     /***************************************************************
@@ -266,9 +268,13 @@ public class TerrainController : MonoBehaviour {
         newMeshObj.transform.localScale = new Vector3(size, size, size);
         newMeshObj.transform.parent = _terrainParent.transform;
 
+        float terrainLength = (_arrayIndex * 1.0f) / (_meshLimit * 1.0f);
+
         Material meshMaterial = new Material(_mainMaterial);
-        meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale, _mainMaterialScale));
-        meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale, starty * _mainMaterialScale));
+        meshMaterial.SetTextureScale("_MainTex", new Vector2(_mainMaterialScale/terrainLength, _mainMaterialScale/terrainLength));
+
+        Debug.Log("startx: " + startx + " - starty: " + starty +  "- _mainMaterialScale: " + _mainMaterialScale);
+        meshMaterial.SetTextureOffset("_MainTex", new Vector2(startx * _mainMaterialScale/terrainLength, starty * _mainMaterialScale/terrainLength));
         newMeshObj.GetComponent<Renderer>().material = meshMaterial;
 
         //add to object ref array
@@ -622,17 +628,14 @@ public class TerrainController : MonoBehaviour {
 	private Texture2D GenerateTexture(int width, int height){
         //Debug.Log("called GenerateTexture");
 
-		float maxHeight = 30.0f;
-        float minHeight = -30.0f;
-
         Texture2D texture = new Texture2D(width, height);
 		Color[] colors = new Color[width * height];
 
-		//_positionArray
-
-		for (int x = 0; x < width; x++) {			
-			for (int y = 0; y < height; y++) {
-				float posHeight = _positionArray [x, y].y;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                float posHeight = _positionArray[x, y].y;
 
                 if (posHeight > _terrainMaxHeight || _terrainMaxHeight == 0.0f)
                 {
@@ -642,10 +645,19 @@ public class TerrainController : MonoBehaviour {
                 {
                     _terrainMinHeight = posHeight;
                 }
+            }
+        }
 
+        float maxHeight = _terrainMaxHeight;
+        float minHeight = _terrainMinHeight;
+        float heightDiff = maxHeight - minHeight;
+
+        for (int x = 0; x < width; x++) {			
+			for (int y = 0; y < height; y++) {
+                float posHeight = _positionArray[x, y].y;
                 float posToColor = 0.0f;
 				if (posHeight < maxHeight) {
-					posToColor = ((posHeight / maxHeight) * 0.5f) + 0.5f;
+					posToColor = ((posHeight - minHeight) / heightDiff);
 				} else {
 					posToColor = 1.0f;
 				}
@@ -659,11 +671,28 @@ public class TerrainController : MonoBehaviour {
 			}
 		}
 
-		texture.SetPixels (colors, 0);
+        //colors = RotateTextureColors(colors, width, height);
+
+
+        texture.SetPixels (colors, 0);
         texture.wrapMode = TextureWrapMode.Clamp;
         texture.Apply();
 
-
         return texture;
 	}
+
+    Color[] RotateTextureColors(Color[] inputArray, int width, int height)
+    {
+        Color[] rotatedArray = new Color[width * height];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                rotatedArray[x * width + y] = inputArray[(height - y - 1) * width + x];
+            }
+        }
+
+        return rotatedArray;
+    }
 }
