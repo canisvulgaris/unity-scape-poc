@@ -41,10 +41,15 @@ public class TerrainController : MonoBehaviour {
     * update the color of a key in the mesh color array      
     * 
     ***************************************************************/
-    public void setMeshColorArray(int key, Color color)
+    public void setMeshColorArrayValue(int key, Color color)
     {
-        //Debug.Log("called setMeshColorArray - key: " + key + " - color: " + color);
+        //Debug.Log("called setMeshColorArray - key: " + key + " - color: " + color);d
         _mainColors[key] = color;
+    }
+
+    public Color getMeshColorArrayValue(int key)
+    {
+        return _mainColors[key];
     }
 
     public List<GameObject> getObjRefArray()

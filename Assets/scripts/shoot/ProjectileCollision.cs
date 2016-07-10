@@ -3,25 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ProjectileCollision : MonoBehaviour
-{    
+{
     public float _areaOfEffectRadius = 5.0f;
-	public float _explosiveRadius = 5.0f;
-	public float _explosiveForce = 5.0f;
+    public float _explosiveRadius = 5.0f;
+    public float _explosiveForce = 5.0f;
+    public Color _explosionDecalColor;
 
     private GameObject _explosionRadiusObj;
     private GameObject _projectileParent;
-
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     void OnCollisionEnter(Collision collision)
     {
@@ -30,16 +19,17 @@ public class ProjectileCollision : MonoBehaviour
             //decrease terrain height within radius of _explosionRadiusObj
             _projectileParent = GameObject.Find("ProjectileParent");
 
-			CreateAreaOfEffectSphere ();
+            CreateAreaOfEffectSphere();
 
-			int terrainLayer = (1 << LayerMask.NameToLayer("Terrain")) | (1 << LayerMask.NameToLayer("PhysicsObject"));
+            int terrainLayer = (1 << LayerMask.NameToLayer("Terrain")) | (1 << LayerMask.NameToLayer("PhysicsObject"));
             Collider[] hitColliders = Physics.OverlapSphere(_explosionRadiusObj.transform.position, _areaOfEffectRadius, terrainLayer);
-					
-            for (int i = 0; i < hitColliders.Length; i ++)
+
+            for (int i = 0; i < hitColliders.Length; i++)
             {
-				if (hitColliders[i].tag == "Terrain") {
-					Mesh collisionMesh = hitColliders[i].GetComponent<MeshFilter> ().mesh;
-					int[] verticesInBounds = GetVerticesInBounds (hitColliders[i], collisionMesh);
+                if (hitColliders[i].tag == "Terrain")
+                {
+                    Mesh collisionMesh = hitColliders[i].GetComponent<MeshFilter>().mesh;
+                    int[] verticesInBounds = GetVerticesInBounds(hitColliders[i], collisionMesh);
 
                     GameObject terrainControllerObject = GameObject.Find("TerrainController");
                     TerrainController terrainController = (TerrainController)terrainControllerObject.GetComponent<TerrainController>();
@@ -52,13 +42,14 @@ public class ProjectileCollision : MonoBehaviour
                     int meshColorIndex = -1;
                     int meshRows = indexObjRef % meshTotalPerLength;
                     int meshCols = (int)Mathf.Floor((indexObjRef * 1.0f) / (meshTotalPerLength * 1.0f));
+                    Color meshColor;
 
                     if (meshRows == 0)
                     {
                         meshColorIndex = localMeshLimit * meshCols;
                     }
                     else
-                    {                       
+                    {
                         if (meshCols == 0)
                         {
                             meshColorIndex = localArrayLength * localMeshLimit * meshRows;
@@ -66,32 +57,31 @@ public class ProjectileCollision : MonoBehaviour
                         else
                         {
                             meshColorIndex = (localArrayLength * localMeshLimit * meshRows) + (localMeshLimit * meshCols);
-                        }                        
+                        }
                     }
 
-                    if (verticesInBounds.Length > 0){
-						Vector3[] collisionMeshVertices = collisionMesh.vertices;
+                    if (verticesInBounds.Length > 0)
+                    {
+                        Vector3[] collisionMeshVertices = collisionMesh.vertices;
 
-	                    float circleRadius = _areaOfEffectRadius * 0.6f;
+                        float circleRadius = _areaOfEffectRadius * 0.6f;
 
-						for (int j = 0; j < verticesInBounds.Length; j++) {
+                        for (int j = 0; j < verticesInBounds.Length; j++)
+                        {
 
-							float distanceToSphereCenter = Vector3.Distance(collisionMeshVertices [verticesInBounds[j]], _explosionRadiusObj.transform.position);
-							//Debug.Log ("distanceToSphereCenter: " + distanceToSphereCenter);
+                            float distanceToSphereCenter = Vector3.Distance(collisionMeshVertices[verticesInBounds[j]], _explosionRadiusObj.transform.position);
 
-							if (circleRadius > distanceToSphereCenter && collisionMeshVertices [verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y) {
-								collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, -1.0f * (circleRadius - distanceToSphereCenter));
-							}
-                            
+                            if (circleRadius > distanceToSphereCenter && collisionMeshVertices[verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y)
+                            {
+                                collisionMeshVertices[verticesInBounds[j]] = Vector3.MoveTowards(collisionMeshVertices[verticesInBounds[j]], _explosionRadiusObj.transform.position, -1.0f * (circleRadius - distanceToSphereCenter));
+                            }
+
                             //update the color of vertices
                             if (meshColorIndex > -1)
                             {
-                                //TODO: update color of vertices to brown
                                 int vertexXIndex = (int)Mathf.Floor((verticesInBounds[j] * 1.0f) / (localMeshLimit * 1.0f));
                                 int vertexYIndex = (verticesInBounds[j] % (localMeshLimit + 1));
                                 int updateColorIndex = 0;
-
-                                //terrainController.setMeshColorArray(meshColorIndex + localMeshLimit, Color.black);
 
                                 if (verticesInBounds[j] > localMeshLimit)
                                 {
@@ -101,15 +91,14 @@ public class ProjectileCollision : MonoBehaviour
                                 {
                                     updateColorIndex = meshColorIndex + (localArrayLength * vertexYIndex);
                                 }
-                                terrainController.setMeshColorArray(updateColorIndex, Color.black);
-                                //Debug.Log("verticesInBounds[j]: " + verticesInBounds[j] + " - vertexXIndex: " + vertexXIndex + " - vertexYIndex: " + vertexYIndex + " - updateColorIndex: " + updateColorIndex);
+                                terrainController.setMeshColorArrayValue(updateColorIndex, _explosionDecalColor);
                             }
                         }
 
                         collisionMesh.vertices = collisionMeshVertices;
-						MeshCollider collisionMeshCollider = hitColliders [i].GetComponent<MeshCollider> ();
-						collisionMeshCollider.sharedMesh = null;
-						collisionMeshCollider.sharedMesh = collisionMesh;
+                        MeshCollider collisionMeshCollider = hitColliders[i].GetComponent<MeshCollider>();
+                        collisionMeshCollider.sharedMesh = null;
+                        collisionMeshCollider.sharedMesh = collisionMesh;
 
                         terrainController.updateTerrainTexture();
                         if (meshCols == 0)
@@ -123,52 +112,54 @@ public class ProjectileCollision : MonoBehaviour
                     }
 
                     //create debris
-                    GetComponent<CreateDebris> ().createDebrisParticleSystem ();
-				}
+                    GetComponent<CreateDebris>().createDebrisParticleSystem();
+                }
 
-				if (hitColliders[i].tag == "PhysicsObject") {
-					//create explosion
-					Rigidbody rigidbody = hitColliders[i].attachedRigidbody;
-					rigidbody.AddExplosionForce (_explosiveForce, transform.position, _explosiveRadius, 5, ForceMode.Impulse);
-				}
+                if (hitColliders[i].tag == "PhysicsObject")
+                {
+                    //create explosion
+                    Rigidbody rigidbody = hitColliders[i].attachedRigidbody;
+                    rigidbody.AddExplosionForce(_explosiveForce, transform.position, _explosiveRadius, 5, ForceMode.Impulse);
+                }
             }
 
-			Destroy (_explosionRadiusObj);
-            Destroy (gameObject);
+            Destroy(_explosionRadiusObj);
+            Destroy(gameObject);
         }
     }
 
-	void CreateAreaOfEffectSphere() {
-		//show area of effect
-		_explosionRadiusObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		_explosionRadiusObj.gameObject.name = "explosionRadiusSphere";
-		_explosionRadiusObj.transform.localScale = new Vector3(_areaOfEffectRadius, _areaOfEffectRadius, _areaOfEffectRadius);
-		_explosionRadiusObj.transform.position = transform.position;
-		_explosionRadiusObj.transform.rotation = transform.rotation;
-		_explosionRadiusObj.transform.parent = _projectileParent.transform;
-		_explosionRadiusObj.GetComponent<MeshRenderer> ().enabled = false;
-	}
+    void CreateAreaOfEffectSphere()
+    {
+        //show area of effect
+        _explosionRadiusObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        _explosionRadiusObj.gameObject.name = "explosionRadiusSphere";
+        _explosionRadiusObj.transform.localScale = new Vector3(_areaOfEffectRadius, _areaOfEffectRadius, _areaOfEffectRadius);
+        _explosionRadiusObj.transform.position = transform.position;
+        _explosionRadiusObj.transform.rotation = transform.rotation;
+        _explosionRadiusObj.transform.parent = _projectileParent.transform;
+        _explosionRadiusObj.GetComponent<MeshRenderer>().enabled = false;
+    }
 
 
-	int[] GetVerticesInBounds(Collider collider, Mesh collisionMesh) {
+    int[] GetVerticesInBounds(Collider collider, Mesh collisionMesh)
+    {
 
-		int[] matchedVerticesArray;
-		List<int> matchedVerticesList = new List<int>();
-        float colorValue = 0.0f;
+        int[] matchedVerticesArray;
+        List<int> matchedVerticesList = new List<int>();
 
-		for (int iter = 0; iter < collisionMesh.vertexCount; iter++) {
-            Vector3 convertedVertex = collider.transform.TransformPoint (collisionMesh.vertices [iter]);
+        for (int iter = 0; iter < collisionMesh.vertexCount; iter++)
+        {
+            Vector3 convertedVertex = collider.transform.TransformPoint(collisionMesh.vertices[iter]);
 
-			if (_explosionRadiusObj.GetComponent<SphereCollider>().bounds.Contains (convertedVertex)) {
-                Debug.DrawRay(convertedVertex, Vector3.up, new Color(colorValue, 0.0f, 0.0f), 50.0f);
-                //Debug.Log ("matched vert - iter: " + iter + " - vector: " + collisionMesh.vertices [iter]);                
+            if (_explosionRadiusObj.GetComponent<SphereCollider>().bounds.Contains(convertedVertex))
+            {
+                //Debug.DrawRay(convertedVertex, Vector3.up, new Color(colorValue, 0.0f, 0.0f), 50.0f);
                 matchedVerticesList.Add(iter);
-                colorValue += 0.1f;
             }
-		}
+        }
 
-		matchedVerticesArray = matchedVerticesList.ToArray();
+        matchedVerticesArray = matchedVerticesList.ToArray();
 
-		return matchedVerticesArray;
-	}
+        return matchedVerticesArray;
+    }
 }
