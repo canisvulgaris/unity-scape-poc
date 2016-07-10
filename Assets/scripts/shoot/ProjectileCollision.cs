@@ -54,6 +54,10 @@ public class ProjectileCollision : MonoBehaviour
 							if (circleRadius > distanceToSphereCenter && collisionMeshVertices [verticesInBounds[j]].y < _explosionRadiusObj.transform.position.y) {
 								collisionMeshVertices [verticesInBounds [j]] = Vector3.MoveTowards (collisionMeshVertices [verticesInBounds [j]], _explosionRadiusObj.transform.position, -1.0f * (circleRadius - distanceToSphereCenter));
 							}
+
+                            //TODO: update color of vertices to brown
+                            
+
 						}
 
 						collisionMesh.vertices = collisionMeshVertices;

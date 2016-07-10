@@ -79,6 +79,8 @@ public class TerrainController : MonoBehaviour {
             Destroy(_borderParent.transform.GetChild(i).gameObject);
         }
 
+        //TODO: remove all projectile objects
+
         //reset values
         _terrainMaxHeight = 0.0f;
         _terrainMinHeight = 0.0f;
@@ -112,8 +114,7 @@ public class TerrainController : MonoBehaviour {
         _mainColors = GenerateColors(_arrayLength, _arrayLength);
         _mainColors = FlipColors(_mainColors, _arrayLength, _arrayLength);
         _mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
-        _mainTexture = GenerateTexture(_mainColors, _arrayLength, _arrayLength);
-        _mainMaterial.SetTexture("_MainTex", _mainTexture);
+        updateTerrainTexture();
 
         if (_objType.name == "terrainMesh")
         {
@@ -756,20 +757,47 @@ public class TerrainController : MonoBehaviour {
     }
 
     /***************************************************************
-     * tied to the GUI button that rotates terrain texture and updates 
-     * mesh materials
+     * rotates terrain texture and updates mesh materials
+     * triggered by GUI button
      * 
     ***************************************************************/
     public void RotateTerrainTextureBy90()
     {
         _mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
+        updateTerrainTexture();
+        updateMeshMaterials();
+    }
+
+    /***************************************************************
+     * update the color of a key in the mesh color array      
+     * 
+    ***************************************************************/
+    public void updateMeshColorArray(int key, Color color)
+    {
+        _mainColors[key] = color;
+    }
+
+    /***************************************************************
+     * re-build the terrain texture based off the global colors and
+     * update global material 
+     * 
+    ***************************************************************/
+    public void updateTerrainTexture()
+    {
         _mainTexture = GenerateTexture(_mainColors, _arrayLength, _arrayLength);
         _mainMaterial.SetTexture("_MainTex", _mainTexture);
+    }
 
+    /***************************************************************
+     * update all the material values for each mesh
+     * 
+    ***************************************************************/
+    public void updateMeshMaterials()
+    {
         int terrainIndex = 0;
 
         for (int startx = 0; startx < _arrayIndex; startx += _meshLimit)
-        {            
+        {
             for (int starty = 0; starty < _arrayIndex; starty += _meshLimit)
             {
                 GameObject newMeshObj = _objRef[terrainIndex];
