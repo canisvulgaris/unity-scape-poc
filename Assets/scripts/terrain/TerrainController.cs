@@ -57,7 +57,7 @@ public class TerrainController : MonoBehaviour {
         ClearTerrain();
         BuildTerrain();
 		_mainTexture = GenerateTexture (_arrayLength, _arrayLength);
-		_mainMaterial.SetTexture ("_MainTex", _mainTexture);
+		_mainMaterial.mainTexture = _mainTexture;
     }
 
     public void ClearTerrain()
