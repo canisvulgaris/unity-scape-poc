@@ -49,20 +49,19 @@ public class ProjectileCollision : MonoBehaviour
 
                     int localArrayLength = terrainController.getArrayLength();
                     int localMeshLimit = terrainController._meshLimit;
-                    int meshTotalPerCol = (localArrayLength / localMeshLimit);
+                    int meshTotalPerLength = (localArrayLength / localMeshLimit);
                     int meshColorIndex = -1;
-                    int meshRows = (int)Mathf.Floor((indexObjRef * 1.0f) / (meshTotalPerCol * 1.0f));
-                    int meshCols = indexObjRef % meshTotalPerCol;
+                    int meshRows = indexObjRef % meshTotalPerLength;
+                    int meshCols = (int)Mathf.Floor((indexObjRef * 1.0f) / (meshTotalPerLength * 1.0f));
 
                     //Debug.Log("localArrayLength: " + localArrayLength);
                     //Debug.Log("localMeshLimit: " + localMeshLimit);
                     //Debug.Log("meshTotalPerCol: " + meshTotalPerCol);
-                    Debug.Log("meshRows: " + meshRows);
-                    Debug.Log("meshCols: " + meshCols);
+                    //Debug.Log("meshRows: " + meshRows + " - meshCols: " + meshCols);
 
-                    if (indexObjRef < meshTotalPerCol)
+                    if (meshRows == 0)
                     {
-                        meshColorIndex = localMeshLimit * indexObjRef;
+                        meshColorIndex = localMeshLimit * meshCols;
                     }
                     else
                     {                       
@@ -76,7 +75,7 @@ public class ProjectileCollision : MonoBehaviour
                         }                        
                     }
 
-                    Debug.Log("meshColorIndex: " + meshColorIndex);
+                    //Debug.Log("meshColorIndex: " + meshColorIndex);
 
                     if (verticesInBounds.Length > 0){
 						Vector3[] collisionMeshVertices = collisionMesh.vertices;
@@ -103,7 +102,7 @@ public class ProjectileCollision : MonoBehaviour
                             //    if (verticesInBounds[j] > localMeshLimit)
                             //    {
                             //        terrainController.setMeshColorArray(meshColorIndex + 
-                            //            (((meshTotalPerCol - meshCols) * localMeshLimit + meshCols * localMeshLimit) * vertexRowIndex) +
+                            //            (((meshTotalPerLength - meshCols) * localMeshLimit + meshCols * localMeshLimit) * vertexRowIndex) +
                             //            vertexColIndex
                             //            , Color.black);
                             //    }
@@ -116,15 +115,14 @@ public class ProjectileCollision : MonoBehaviour
 						collisionMeshCollider.sharedMesh = collisionMesh;
 
                         terrainController.updateTerrainTexture();
-                        terrainController.updateAllMeshMaterials();
-                        //if (meshColRemainder == 0)
-                        //{
-                        //    terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, 0);
-                        //}
-                        //else
-                        //{
-                        //    terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshRows, localMeshLimit * meshCols);
-                        //}
+                        if (meshCols == 0)
+                        {
+                            terrainController.updateMeshMaterials(indexObjRef, 0, localMeshLimit * meshRows);
+                        }
+                        else
+                        {
+                            terrainController.updateMeshMaterials(indexObjRef, localMeshLimit * meshCols, localMeshLimit * meshRows);
+                        }
                     }
 
                     //create debris

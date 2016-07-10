@@ -132,8 +132,6 @@ public class TerrainController : MonoBehaviour {
         SetTerrainHeightParameters();
         _mainColors = new Color[_arrayLength * _arrayLength];
         _mainColors = GenerateColors(_arrayLength, _arrayLength);
-        //_mainColors = FlipColors(_mainColors, _arrayLength, _arrayLength);
-        //_mainColors = RotateColors(_mainColors, _arrayLength, _arrayLength);
         updateTerrainTexture();
 
         if (_objType.name == "terrainMesh")
