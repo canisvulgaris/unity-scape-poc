@@ -693,10 +693,10 @@ public class TerrainController : MonoBehaviour {
 
         Color[] colors = new Color[width * height];
 
-        if (_terrainMaxHeight == 0.0f && _terrainMinHeight == 0.0f)
-        {
-            Debug.LogError("Terrain Min and Max need to be set before calling generate texture");
-        }
+        //if (_terrainMaxHeight == 0.0f && _terrainMinHeight == 0.0f)
+        //{
+        //    Debug.LogError("Terrain Min and Max need to be set before calling generate texture");
+        //}
 
         float maxHeight = _terrainMaxHeight;
         float minHeight = _terrainMinHeight;

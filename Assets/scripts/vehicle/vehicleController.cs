@@ -19,6 +19,10 @@ public class vehicleController : MonoBehaviour
     public float maxMotorTorque; // maximum torque the motor can apply to wheel
     public float maxSteeringAngle; // maximum steer angle the wheel can have
 
+    public Vector3 resetForce;
+    public Vector3 resetTorque;
+
+
     // finds the corresponding visual wheel
     // correctly applies the transform
     public void ApplyLocalPositionToVisuals(WheelCollider collider, GameObject wheelObject)
@@ -58,6 +62,12 @@ public class vehicleController : MonoBehaviour
             }
             ApplyLocalPositionToVisuals(axleInfo.leftWheel, axleInfo.leftWheelObject);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel, axleInfo.rightWheelObject);
+        }
+
+        if (Input.GetButton("Reset"))
+        {
+            transform.GetComponent<Rigidbody>().AddForce(resetForce, ForceMode.Impulse);
+            transform.GetComponent<Rigidbody>().AddTorque(resetTorque, ForceMode.Impulse);
         }
     }
 }
