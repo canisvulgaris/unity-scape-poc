@@ -23,7 +23,7 @@ public class ProjectileCollision : MonoBehaviour
 
             CreateAreaOfEffectSphere();
 
-            int terrainLayer = (1 << LayerMask.NameToLayer("Terrain")) | (1 << LayerMask.NameToLayer("PhysicsObject"));
+            int terrainLayer = (1 << LayerMask.NameToLayer("Terrain")) | (1 << LayerMask.NameToLayer("PhysicsObject")) | (1 << LayerMask.NameToLayer("Vehicle"));
             Collider[] hitColliders = Physics.OverlapSphere(_explosionRadiusObj.transform.position, _areaOfEffectRadius, terrainLayer);
 
             for (int i = 0; i < hitColliders.Length; i++)

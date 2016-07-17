@@ -22,6 +22,10 @@ public class BasicMoveLook : MonoBehaviour {
 	public float _freeMoveSpeed = 1.0f;
     public float _boostMultiplier = 3.0f;
 
+    public float _cameraVehicleOffset = 20.0f;
+
+    public GameObject vehicleObject;
+
 	// Use this for initialization
 	void Start () {
 		transform.position = _initialCameraPosition;
@@ -44,40 +48,37 @@ public class BasicMoveLook : MonoBehaviour {
 		transform.localRotation = Quaternion.AngleAxis(_currentCameraRotation.x, Vector3.up);
 		transform.localRotation *= Quaternion.AngleAxis(_currentCameraRotation.y, Vector3.left);
 
-		//transform.position += transform.forward * _defaultMoveSpeed * Input.GetAxis("Vertical");
-		transform.position = _currentCameraPosition;
-		if (transform.position.x >= _cameraPositionXMin && Input.GetAxis("Horizontal") < 0) {
-			transform.position += transform.right * _defaultMoveSpeed * Input.GetAxis("Horizontal");
-		}
-		else if (transform.position.x <= _cameraPositionXMax && Input.GetAxis("Horizontal") > 0) {
-			transform.position += transform.right * _defaultMoveSpeed * Input.GetAxis("Horizontal");
-		}
+        if (Input.GetAxis("Vehicle Horizontal") != 0 || Input.GetAxis("Vehicle Vertical") != 0)
+        {
+            if (vehicleObject != null)
+            {
+                transform.Translate(vehicleObject.transform.position.x - transform.position.x, 0, (vehicleObject.transform.position.z - transform.position.z) - _cameraVehicleOffset, Space.World);
 
-		if (transform.position.z >= _cameraPositionZMin && Input.GetAxis("Vertical") < 0) {
-			transform.Translate(0, 0, _defaultMoveSpeed * Input.GetAxis("Vertical"), Space.World);
-		}
-		else if (transform.position.z <= _cameraPositionZMax && Input.GetAxis("Vertical") > 0) {
-			transform.Translate(0, 0, _defaultMoveSpeed * Input.GetAxis("Vertical"), Space.World);
-		}
+            }
+        }
+        else
+        {
+            //transform.position += transform.forward * _defaultMoveSpeed * Input.GetAxis("Vertical");
+            transform.position = _currentCameraPosition;
+            if (transform.position.x >= _cameraPositionXMin && Input.GetAxis("Horizontal") < 0)
+            {
+                transform.position += transform.right * _defaultMoveSpeed * Input.GetAxis("Horizontal");
+            }
+            else if (transform.position.x <= _cameraPositionXMax && Input.GetAxis("Horizontal") > 0)
+            {
+                transform.position += transform.right * _defaultMoveSpeed * Input.GetAxis("Horizontal");
+            }
 
-		_currentCameraPosition = transform.position;
+            if (transform.position.z >= _cameraPositionZMin && Input.GetAxis("Vertical") < 0)
+            {
+                transform.Translate(0, 0, _defaultMoveSpeed * Input.GetAxis("Vertical"), Space.World);
+            }
+            else if (transform.position.z <= _cameraPositionZMax && Input.GetAxis("Vertical") > 0)
+            {
+                transform.Translate(0, 0, _defaultMoveSpeed * Input.GetAxis("Vertical"), Space.World);
+            }
+        }
 
-//      rotationX += Input.GetAxis("Mouse X")*lookSpeed;
-//		rotationY += Input.GetAxis("Mouse Y")*lookSpeed;
-//		rotationY = Mathf.Clamp (rotationY, -90, 90);
-
-//		transform.localRotation = Quaternion.AngleAxis(rotationX, Vector3.up);
-//		transform.localRotation *= Quaternion.AngleAxis(rotationY, Vector3.left);
-
-//        if (Input.GetAxis("Boost") == 1)
-//        {
-//            transform.position += transform.forward * moveSpeed * boostMultiplier * Input.GetAxis("Vertical");
-//            transform.position += transform.right * moveSpeed * boostMultiplier * Input.GetAxis("Horizontal");
-//        }
-//        else
-//        {
-//            transform.position += transform.forward * moveSpeed * Input.GetAxis("Vertical");
-//            transform.position += transform.right * moveSpeed * Input.GetAxis("Horizontal");
-//        }        
+		_currentCameraPosition = transform.position;     
 	}
 }
