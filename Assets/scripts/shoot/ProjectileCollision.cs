@@ -44,7 +44,7 @@ public class ProjectileCollision : MonoBehaviour
                     int meshColorIndex = -1;
                     int meshRows = indexObjRef % meshTotalPerLength;
                     int meshCols = (int)Mathf.Floor((indexObjRef * 1.0f) / (meshTotalPerLength * 1.0f));
-                    Color meshColor;
+                    //Color meshColor;
 
                     if (meshRows == 0)
                     {
