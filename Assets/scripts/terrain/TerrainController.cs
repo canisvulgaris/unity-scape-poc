@@ -161,8 +161,8 @@ public class TerrainController : MonoBehaviour {
    ***************************************************************/
     void AddBorder()
     {
-        //TODO : need to remove old borders when refreshing terrain
         float borderHeight = 64;
+        float viewBorderHeight = 12;
         float borderWidth = 2;
 
         GameObject borderN = Instantiate(_borderBlock, new Vector3(0, 0, _arrayIndex / 2), Quaternion.identity) as GameObject;
@@ -177,9 +177,10 @@ public class TerrainController : MonoBehaviour {
         borderS.transform.localScale = new Vector3(borderWidth, borderHeight, _arrayIndex);
         borderS.transform.parent = _borderParent.transform;
 
-        //        GameObject borderW = Instantiate(_borderBlock, new Vector3(_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
-        //        borderW.transform.localScale = new Vector3(_arrayIndex, borderHeight, borderWidth);
-        //        borderW.transform.parent = _borderParent.transform;
+        //this side has a lower barrier as the camera view is locked in this direction by default
+        GameObject borderW = Instantiate(_borderBlock, new Vector3(_arrayIndex / 2, 0, 0), Quaternion.identity) as GameObject;
+        borderW.transform.localScale = new Vector3(_arrayIndex, viewBorderHeight, borderWidth);
+        borderW.transform.parent = _borderParent.transform;
 
     }
 
