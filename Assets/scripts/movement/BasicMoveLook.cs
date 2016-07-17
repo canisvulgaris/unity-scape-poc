@@ -9,11 +9,15 @@ public class BasicMoveLook : MonoBehaviour {
 	public Quaternion _initialCameraRotation = new Quaternion (0.0f, -60.0f, 0.0f, 0.0f);
 	public Quaternion _currentCameraRotation;
 
-	public float _cameraPositionXMin = 4.0f;
-	public float _cameraPositionXMax = 124.0f;
+    public float _cameraPositionXDefault = 0.0f;
+    public float _cameraPositionXDiff = 4.0f;
+    public float _cameraPositionXMin;
+    public float _cameraPositionXMax;
 
-	public float _cameraPositionZMin = -11.0f;
-	public float _cameraPositionZMax = 106.0f;
+    public float _cameraPositionZDefault = 10.0f;
+    public float _cameraPositionZDiff = 20.0f;
+    public float _cameraPositionZMin;
+    public float _cameraPositionZMax;
 
 	public float _defaultLookSpeed = 5.0f;
 	public float _defaultMoveSpeed = 1.0f;
@@ -33,6 +37,16 @@ public class BasicMoveLook : MonoBehaviour {
 
 		transform.rotation = _initialCameraRotation;
 		_currentCameraRotation = _initialCameraRotation;
+
+        GameObject terrainControllerObject = GameObject.Find("TerrainController");
+        TerrainController terrainController = (TerrainController)terrainControllerObject.GetComponent<TerrainController>();
+
+        int arrayIndex = terrainController.getArrayIndex();
+
+        _cameraPositionXMin = _cameraPositionXDefault + _cameraPositionXDiff;
+        _cameraPositionXMax = arrayIndex - _cameraPositionXDiff;
+        _cameraPositionZMin = _cameraPositionZDefault - _cameraPositionZDiff;
+        _cameraPositionZMax = arrayIndex - _cameraPositionZDiff;
 
     }
 	

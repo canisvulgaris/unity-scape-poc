@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class ProjectileCollision : MonoBehaviour
 {
-    public float _areaOfEffectRadius = 5.0f;
-    public float _explosiveRadius = 5.0f;
-    public float _explosiveForce = 5.0f;
+    public float _areaOfEffectRadius = 3.0f;
+    public float _explosiveRadius = 7.0f;
+    public float _explosiveForce = 7.0f;
     public Color _explosionDecalColor;
 
     private GameObject _explosionRadiusObj;
@@ -19,7 +19,7 @@ public class ProjectileCollision : MonoBehaviour
             //decrease terrain height within radius of _explosionRadiusObj
             _projectileParent = GameObject.Find("ProjectileParent");
 
-            _areaOfEffectRadius += (Random.value * 6) - 3;
+            _areaOfEffectRadius += (Random.value * 2) - 1;
 
             CreateAreaOfEffectSphere();
 

@@ -62,6 +62,11 @@ public class TerrainController : MonoBehaviour {
         return _arrayLength;
     }
 
+    public int getArrayIndex()
+    {
+        return _arrayIndex;
+    }
+
     /*************************************************************** 
      * Initialization
      * 
