@@ -123,6 +123,12 @@ public class ProjectileCollision : MonoBehaviour
                     Rigidbody rigidbody = hitColliders[i].attachedRigidbody;
                     rigidbody.AddExplosionForce(_explosiveForce, transform.position, _explosiveRadius, 5, ForceMode.Impulse);
                 }
+                if (hitColliders[i].tag == "Vehicle")
+                {
+                    //create explosion
+                    Rigidbody rigidbody = hitColliders[i].attachedRigidbody;
+                    rigidbody.AddExplosionForce(_explosiveForce * 100, transform.position, _explosiveRadius, 5, ForceMode.Impulse);
+                }
             }
 
             Destroy(_explosionRadiusObj);
