@@ -30,6 +30,8 @@ public class BasicMoveLook : MonoBehaviour {
 
     public GameObject vehicleObject;
 
+    private bool lockOnCar = false;
+
 	// Use this for initialization
 	void Start () {
 		transform.position = _initialCameraPosition;
@@ -62,16 +64,19 @@ public class BasicMoveLook : MonoBehaviour {
 		transform.localRotation = Quaternion.AngleAxis(_currentCameraRotation.x, Vector3.up);
 		transform.localRotation *= Quaternion.AngleAxis(_currentCameraRotation.y, Vector3.left);
 
-        if (Input.GetAxis("Vehicle Horizontal") != 0 || Input.GetAxis("Vehicle Vertical") != 0)
-        {
+        if (Input.GetAxis("Vehicle Horizontal") != 0 || Input.GetAxis("Vehicle Vertical") != 0 || lockOnCar == true)
+        {            
             if (vehicleObject != null)
             {
                 transform.Translate(vehicleObject.transform.position.x - transform.position.x, 0, (vehicleObject.transform.position.z - transform.position.z) - _cameraVehicleOffset, Space.World);
 
             }
+            lockOnCar = true;
         }
-        else
+
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
+            lockOnCar = false;
             //transform.position += transform.forward * _defaultMoveSpeed * Input.GetAxis("Vertical");
             transform.position = _currentCameraPosition;
             if (transform.position.x >= _cameraPositionXMin && Input.GetAxis("Horizontal") < 0)
