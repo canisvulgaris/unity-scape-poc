@@ -7,8 +7,9 @@ public class FireProjectile : MonoBehaviour {
     public GameObject _objProj2;
     public GameObject _projParent;
     public float _distance = 10.0f;
+    public float _force = 2000.0f;
 
-	private bool buttonClicked = false;
+    private bool buttonClicked = false;
 
     // Use this for initialization
     void Start () {
@@ -23,13 +24,13 @@ public class FireProjectile : MonoBehaviour {
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
-				var position = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, _distance);
+				var position = new Vector3 (Input.mousePosition.x + Random.value * 10, Input.mousePosition.y + Random.value * 10, _distance);
 
 				position = Camera.main.ScreenToWorldPoint (position);
 				GameObject objFired = Instantiate (_objProj1, Camera.main.transform.position, Quaternion.identity) as GameObject;
 				objFired.transform.parent = _projParent.transform;
 				objFired.transform.LookAt (position);
-				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * 1000);
+				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * _force);
 				StartCoroutine(ResetButtonClicked());
 			}
         }
@@ -38,20 +39,20 @@ public class FireProjectile : MonoBehaviour {
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
-				var position = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, _distance);
+				var position = new Vector3 (Input.mousePosition.x + Random.value * 10, Input.mousePosition.y + Random.value * 10, _distance);
 
 				position = Camera.main.ScreenToWorldPoint (position);
 				GameObject objFired = Instantiate (_objProj2, Camera.main.transform.position, Quaternion.identity) as GameObject;
 				objFired.transform.parent = _projParent.transform;
 				objFired.transform.LookAt (position);
-				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * 1000);
+				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * _force);
 				StartCoroutine (ResetButtonClicked ());
 			}
         }
     }
 
 	IEnumerator ResetButtonClicked() {		
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.2f);
 		buttonClicked = false;
 	}
 
