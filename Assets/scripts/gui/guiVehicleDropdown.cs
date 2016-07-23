@@ -16,7 +16,7 @@ public class guiVehicleDropdown : MonoBehaviour {
         {
             vehicleDropdown.options.Add(new Dropdown.OptionData() { text=obj.name});
         }
-        vehicleDropdown.value = 0;
+        vehicleDropdown.value = 1;
     }
 
     public void updateVehicleSelected()
