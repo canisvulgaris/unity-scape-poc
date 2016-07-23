@@ -29,6 +29,7 @@ public class BasicMoveLook : MonoBehaviour {
     public float _cameraVehicleOffset = 20.0f;
 
     public GameObject vehicleObject;
+    public float vehicleDropHeight = 50.0f;
 
     private bool lockOnCar = false;
 
@@ -52,6 +53,36 @@ public class BasicMoveLook : MonoBehaviour {
 
     }
 	
+    public void resetCarPosition()
+    {
+        float boundaryLimitX = 10.0f;
+        float boundaryLimitZ = 20.0f;
+        Vector3 validCarPosition = transform.position;
+        validCarPosition.y = vehicleDropHeight;
+
+        if ((_cameraPositionXMin + boundaryLimitX) > validCarPosition.x)
+        {
+            validCarPosition.x = _cameraPositionXMin + boundaryLimitX;
+        }
+
+        if ((_cameraPositionXMax - boundaryLimitX) < validCarPosition.x)
+        {
+            validCarPosition.x = _cameraPositionXMax - boundaryLimitX;
+        }
+
+        if ((_cameraPositionZMin + boundaryLimitZ) > validCarPosition.z)
+        {
+            validCarPosition.z = _cameraPositionZMin + boundaryLimitZ;
+        }
+
+        if ((_cameraPositionZMax - boundaryLimitZ) < validCarPosition.z)
+        {
+            validCarPosition.z = _cameraPositionZMax - boundaryLimitZ;
+        }
+
+        vehicleObject.transform.position = validCarPosition;
+    }
+
 	// Update is called once per frame
 	void FixedUpdate () {
         //Cursor.lockState = CursorLockMode.Locked;
