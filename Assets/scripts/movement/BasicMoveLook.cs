@@ -54,7 +54,7 @@ public class BasicMoveLook : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
 
 
 		//rotationY = Mathf.Clamp (rotationY, -90, 90);
