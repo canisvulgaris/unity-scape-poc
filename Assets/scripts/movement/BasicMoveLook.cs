@@ -81,6 +81,7 @@ public class BasicMoveLook : MonoBehaviour {
         }
 
         vehicleObject.transform.position = validCarPosition;
+        vehicleObject.transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
 	// Update is called once per frame
