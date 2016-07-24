@@ -118,9 +118,19 @@ public class vehicleController : MonoBehaviour
 
         if (Input.GetButton("Reset"))
         {
-            terrainController.getHeightAtVertex(transform.position);
-            transform.GetComponent<Rigidbody>().AddForce(resetForce, ForceMode.Impulse);
-            transform.GetComponent<Rigidbody>().AddTorque(resetTorque, ForceMode.Impulse);
+            float terrainHeight = terrainController.getHeightAtVertex(transform.position);
+
+            //if (transform.position.y < terrainHeight + 20.0f)
+            //{
+            //    transform.position += Vector3.up;
+            //}
+
+            Vector3 targetDir = (transform.position + Vector3.forward) - transform.position;
+            Vector3 newDir = Vector3.RotateTowards(transform.position, targetDir, Time.deltaTime, 0.1f);
+
+            if (Vector3.Angle(targetDir, newDir) > 10.0f) {                
+                transform.rotation = Quaternion.LookRotation(newDir);
+            }
         }
 
 
