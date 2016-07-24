@@ -1,7 +1,6 @@
 # SCAPE_poc
 
 # in progress
-- add crosshair/cursor for mouse
 - add guns to car
 - add another car with even bigger tires
 
@@ -10,6 +9,7 @@
 - 
 
 #done
+- add crosshair/cursor for mouse
 - fix the R reset movement (better)
 - added ability to spawn in/out vehicles
 - added basic debug gui
