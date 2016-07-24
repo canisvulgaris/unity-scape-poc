@@ -1,7 +1,6 @@
 # SCAPE_poc
 
 # in progress
-- fix the R reset movement
 - add crosshair/cursor for mouse
 - add guns to car
 - add another car with even bigger tires
@@ -11,6 +10,7 @@
 - 
 
 #done
+- fix the R reset movement (better)
 - added ability to spawn in/out vehicles
 - added basic debug gui
 - do not let south border wall interfere with projectiles, but make it block objects (reduced size)
