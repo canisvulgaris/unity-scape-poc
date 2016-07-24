@@ -3,9 +3,12 @@ using System.Collections;
 
 public class FireProjectileVehicle : MonoBehaviour {
 
-    public GameObject _objProj1;
-    public GameObject _objProj2;
+    public GameObject _objProj;
+    //public GameObject _objProj2;
+    public GameObject _objProjOrigin;
+    public GameObject _objProjTarget;
     public GameObject _projParent;
+
     public float _distance = 10.0f;
     public float _force = 2000.0f;
 
@@ -20,33 +23,19 @@ public class FireProjectileVehicle : MonoBehaviour {
     void FixedUpdate()
     {
         //TODO : need to set expiration for projectiles so they dissappear eventually
-		if (Input.GetKey(KeyCode.Z))
+		if (Input.GetKey(KeyCode.M))
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
-				var position = new Vector3 (Input.mousePosition.x + Random.value * 10, Input.mousePosition.y + Random.value * 10, _distance);
+				//var position = new Vector3 (Input.mousePosition.x + Random.value * 10, Input.mousePosition.y + Random.value * 10, _distance);
+				//position = Camera.main.ScreenToWorldPoint (position);
 
-				position = Camera.main.ScreenToWorldPoint (position);
-				GameObject objFired = Instantiate (_objProj1, Camera.main.transform.position, Quaternion.identity) as GameObject;
+				GameObject objFired = Instantiate(_objProj, _objProjOrigin.transform.position, Quaternion.identity) as GameObject;
+
 				objFired.transform.parent = _projParent.transform;
-				objFired.transform.LookAt (position);
+				objFired.transform.LookAt (_objProjTarget.transform.position);
 				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * _force);
 				StartCoroutine(ResetButtonClicked());
-			}
-        }
-
-		if (Input.GetKey(KeyCode.X))
-        {
-			if (!buttonClicked) {
-				buttonClicked = true;
-				var position = new Vector3 (Input.mousePosition.x + Random.value * 10, Input.mousePosition.y + Random.value * 10, _distance);
-
-				position = Camera.main.ScreenToWorldPoint (position);
-				GameObject objFired = Instantiate (_objProj2, Camera.main.transform.position, Quaternion.identity) as GameObject;
-				objFired.transform.parent = _projParent.transform;
-				objFired.transform.LookAt (position);
-				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * _force);
-				StartCoroutine (ResetButtonClicked ());
 			}
         }
     }
@@ -55,5 +44,4 @@ public class FireProjectileVehicle : MonoBehaviour {
 		yield return new WaitForSeconds(0.2f);
 		buttonClicked = false;
 	}
-
 }
