@@ -26,7 +26,13 @@ public class vehicleController : MonoBehaviour
     public Vector3 resetForce;
     public Vector3 resetTorque;
 
+    public float brakeForce = 100.0f;
+
     private float colorInc;
+    private bool forward = false;
+    private bool reverse = false;
+    private bool acceleration = false;
+    private bool braking = false;
 
     private GameObject terrainControllerObject;
     private TerrainController terrainController;
@@ -63,6 +69,42 @@ public class vehicleController : MonoBehaviour
         float motor = maxMotorTorque * Input.GetAxis("Vehicle Vertical");
         float steering = maxSteeringAngle * Input.GetAxis("Vehicle Horizontal");
 
+        Vector3 currentVelocity = gameObject.GetComponent<Rigidbody>().velocity;
+        Vector3 localVelocity = transform.InverseTransformDirection(currentVelocity);
+
+        //Debug.Log("motor: " + motor + " - localVelocity: " + localVelocity);
+
+        if (localVelocity.z > 0 )
+        {
+            forward = true;
+        }
+        else
+        {
+            forward = false;
+        }
+
+        if (localVelocity.z < 0)
+        {
+            reverse = true;
+        }
+        else
+        {
+            reverse = false;
+        }
+
+        if (motor < 0 && forward == true)
+        {
+            braking = true;
+        }
+        else if (motor > 0 && reverse == true)
+        {
+            braking = true;
+        }
+        else
+        {
+            braking = false;
+        }
+
         foreach (AxleInfo axleInfo in axleInfos)
         {
             if (axleInfo.steering)
@@ -74,6 +116,22 @@ public class vehicleController : MonoBehaviour
             {
                 axleInfo.leftWheel.motorTorque = motor;
                 axleInfo.rightWheel.motorTorque = motor;
+            }
+            else
+            {
+                axleInfo.leftWheel.motorTorque = 0;
+                axleInfo.rightWheel.motorTorque = 0;
+            }
+
+            if (braking)
+            {
+                axleInfo.leftWheel.brakeTorque = brakeForce;
+                axleInfo.rightWheel.brakeTorque = brakeForce;
+            }
+            else
+            {
+                axleInfo.leftWheel.brakeTorque = 0;
+                axleInfo.rightWheel.brakeTorque = 0;
             }
             ApplyLocalPositionToVisuals(axleInfo.leftWheel, axleInfo.leftWheelObject);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel, axleInfo.rightWheelObject);
