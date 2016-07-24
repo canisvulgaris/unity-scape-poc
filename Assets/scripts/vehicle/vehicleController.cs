@@ -120,12 +120,14 @@ public class vehicleController : MonoBehaviour
         {
             float terrainHeight = terrainController.getHeightAtVertex(transform.position);
 
-            //if (transform.position.y < terrainHeight + 20.0f)
-            //{
-            //    transform.position += Vector3.up;
-            //}
+            if (transform.position.y < terrainHeight + 20.0f)
+            {
+                transform.position += Vector3.up * 5* Time.deltaTime;
+            }
 
-            Vector3 targetDir = (transform.position + Vector3.forward) - transform.position;
+            int arrayIndex = terrainController.getArrayIndex();
+
+            Vector3 targetDir = new Vector3(arrayIndex/2.0f, terrainHeight, arrayIndex/2.0f) - transform.position;
             Vector3 newDir = Vector3.RotateTowards(transform.position, targetDir, Time.deltaTime, 0.1f);
 
             if (Vector3.Angle(targetDir, newDir) > 10.0f) {                
