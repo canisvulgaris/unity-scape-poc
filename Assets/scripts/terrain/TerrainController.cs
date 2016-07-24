@@ -67,6 +67,74 @@ public class TerrainController : MonoBehaviour {
         return _arrayIndex;
     }
 
+    public Vector3 getClosestVertex(Vector3 origin)
+    {
+        Vector3 point = Vector3.zero;
+
+        if (origin.x > _arrayIndex && origin.z > _arrayIndex)
+        {
+            //origin is out of bounds of the terrain
+            return new Vector3(-1, -1, -1);
+        }
+        
+        RaycastHit hit = new RaycastHit();
+        int terrainLayer = 1 << LayerMask.NameToLayer("Terrain");
+
+        //fire ray downwards
+        if (Physics.Raycast(origin, Vector3.down, out hit, 300.0f, terrainLayer))
+        {
+            Debug.DrawRay(origin, Vector3.down, Color.red, 10.0f);
+
+            if (hit.collider.gameObject.tag == "Terrain")
+            {
+                //int meshIndex = _objRef.IndexOf(hit.collider.gameObject);
+                //Debug.Log("meshIndex: " + meshIndex);
+
+                Mesh mesh = hit.collider.GetComponent<MeshFilter>().mesh;
+                Vector3[] meshVertices = mesh.vertices;
+
+                int triIndex = mesh.triangles[hit.triangleIndex];
+                point = mesh.vertices[triIndex];
+
+                //testing mesh deform
+                //meshVertices[triIndex] += Vector3.up;
+                //mesh.vertices = meshVertices;
+
+                //Debug.Log("point: " + point);
+            }
+        }
+
+        return point;
+    }
+
+    public float getHeightAtVertex(Vector3 origin)
+    {
+        float height = 0;
+
+        if (origin.x > _arrayIndex && origin.z > _arrayIndex)
+        {
+            //origin is out of bounds of the terrain
+            return -1;
+        }
+
+        RaycastHit hit = new RaycastHit();
+        int terrainLayer = 1 << LayerMask.NameToLayer("Terrain");
+
+        //fire ray downwards
+        if (Physics.Raycast(origin, Vector3.down, out hit, 300.0f, terrainLayer))
+        {
+            Debug.DrawRay(origin, Vector3.down, Color.blue, 10.0f);
+
+            if (hit.collider.gameObject.tag == "Terrain")
+            {
+                height = hit.point.y;
+                //Debug.Log("height: " + height);
+            }
+        }
+
+        return height;
+    }
+
     /*************************************************************** 
      * Initialization
      * 

@@ -28,6 +28,15 @@ public class vehicleController : MonoBehaviour
 
     private float colorInc;
 
+    private GameObject terrainControllerObject;
+    private TerrainController terrainController;
+
+    void Start()
+    {
+        terrainControllerObject = GameObject.Find("TerrainController");
+        terrainController = (TerrainController)terrainControllerObject.GetComponent<TerrainController>();
+    }
+
 
     // finds the corresponding visual wheel
     // correctly applies the transform
@@ -109,6 +118,7 @@ public class vehicleController : MonoBehaviour
 
         if (Input.GetButton("Reset"))
         {
+            terrainController.getHeightAtVertex(transform.position);
             transform.GetComponent<Rigidbody>().AddForce(resetForce, ForceMode.Impulse);
             transform.GetComponent<Rigidbody>().AddTorque(resetTorque, ForceMode.Impulse);
         }
