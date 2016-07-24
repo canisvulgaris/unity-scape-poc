@@ -16,14 +16,14 @@ Platform assembly: D:\Google Drive\GITHUB\scape_poc\Bin\app_Data\Managed\UnityEn
 Loading D:\Google Drive\GITHUB\scape_poc\Bin\app_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: D:\Google Drive\GITHUB\scape_poc\Bin\app_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading D:\Google Drive\GITHUB\scape_poc\Bin\app_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.375 seconds
+- Completed reload, in  0.084 seconds
 Platform assembly: D:\Google Drive\GITHUB\scape_poc\Bin\app_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: D:\Google Drive\GITHUB\scape_poc\Bin\app_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1200 59Hz; virtual: 3840x1200 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 1.341949 ms
+UnloadTime: 1.229006 ms
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 208c -> priority: 1 
-  Thread -> id: 35d8 -> priority: 1 
+  Thread -> id: 3398 -> priority: 1 
+  Thread -> id: f04 -> priority: 1 

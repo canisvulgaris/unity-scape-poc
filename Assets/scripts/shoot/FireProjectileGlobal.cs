@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FireProjectile : MonoBehaviour {
+public class FireProjectileGlobal : MonoBehaviour {
 
     public GameObject _objProj1;
     public GameObject _objProj2;

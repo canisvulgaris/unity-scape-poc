@@ -31,7 +31,7 @@ public class vehicleController : MonoBehaviour
     private float colorInc;
     private bool forward = false;
     private bool reverse = false;
-    private bool acceleration = false;
+    //private bool acceleration = false;
     private bool braking = false;
 
     private GameObject terrainControllerObject;

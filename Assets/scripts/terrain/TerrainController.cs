@@ -90,13 +90,13 @@ public class TerrainController : MonoBehaviour {
                 //int meshIndex = _objRef.IndexOf(hit.collider.gameObject);
                 //Debug.Log("meshIndex: " + meshIndex);
 
-                Mesh mesh = hit.collider.GetComponent<MeshFilter>().mesh;
-                Vector3[] meshVertices = mesh.vertices;
+                Mesh mesh = hit.collider.GetComponent<MeshFilter>().mesh;                
 
                 int triIndex = mesh.triangles[hit.triangleIndex];
                 point = mesh.vertices[triIndex];
 
                 //testing mesh deform
+                //Vector3[] meshVertices = mesh.vertices;
                 //meshVertices[triIndex] += Vector3.up;
                 //mesh.vertices = meshVertices;
 
