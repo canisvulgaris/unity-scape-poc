@@ -20,7 +20,7 @@ public class FireProjectileGlobal : MonoBehaviour {
     void FixedUpdate()
     {
         //TODO : need to set expiration for projectiles so they dissappear eventually
-		if (Input.GetKey(KeyCode.Z))
+		if (Input.GetKey(KeyCode.K))
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
@@ -29,13 +29,18 @@ public class FireProjectileGlobal : MonoBehaviour {
 				position = Camera.main.ScreenToWorldPoint (position);
 				GameObject objFired = Instantiate (_objProj1, Camera.main.transform.position, Quaternion.identity) as GameObject;
 				objFired.transform.parent = _projParent.transform;
+                
+                float objScale = Random.value * 5.0f; //randomize size
+                objScale = (objScale < 1.0f) ? objScale + 1.0f : objScale; //make sure size is greater pr equal to 1
+
+                objFired.transform.localScale = new Vector3(objScale, objScale, objScale);
 				objFired.transform.LookAt (position);
 				objFired.GetComponent<Rigidbody> ().AddForce (objFired.transform.forward * _force);
 				StartCoroutine(ResetButtonClicked());
 			}
         }
 
-		if (Input.GetKey(KeyCode.X))
+		if (Input.GetKey(KeyCode.L))
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
