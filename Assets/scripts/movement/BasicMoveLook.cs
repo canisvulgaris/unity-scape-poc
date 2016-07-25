@@ -32,6 +32,7 @@ public class BasicMoveLook : MonoBehaviour {
     public float vehicleDropHeight = 50.0f;
 
     private bool lockOnCar = false;
+    private int arrayIndex = 0;
 
     public Texture2D cursorTexture;
     public CursorMode cursorMode = CursorMode.Auto;
@@ -50,20 +51,32 @@ public class BasicMoveLook : MonoBehaviour {
 		transform.rotation = _initialCameraRotation;
 		_currentCameraRotation = _initialCameraRotation;
 
+        setupDefaults();
+    }
+
+    void setupDefaults()
+    {
         GameObject terrainControllerObject = GameObject.Find("TerrainController");
         TerrainController terrainController = (TerrainController)terrainControllerObject.GetComponent<TerrainController>();
 
-        int arrayIndex = terrainController.getArrayIndex();
+        arrayIndex = terrainController.getArrayIndex();
+        Debug.Log(arrayIndex);
 
         _cameraPositionXMin = _cameraPositionXDefault + _cameraPositionXDiff;
         _cameraPositionXMax = arrayIndex - _cameraPositionXDiff;
         _cameraPositionZMin = _cameraPositionZDefault - _cameraPositionZDiff;
         _cameraPositionZMax = arrayIndex - _cameraPositionZDiff;
-
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
+        //in case values have not been initialized
+        if (arrayIndex == 0)
+        {
+            setupDefaults();
+        }
+
         Cursor.lockState = CursorLockMode.Confined;
 
         //rotationY = Mathf.Clamp (rotationY, -90, 90);
