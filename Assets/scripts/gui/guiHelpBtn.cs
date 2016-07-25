@@ -14,7 +14,7 @@ public class guiHelpBtn : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.H))
         {
             ToggleHelpText();
         }

@@ -23,7 +23,7 @@ public class FireProjectileVehicle : MonoBehaviour {
     void FixedUpdate()
     {
         //TODO : need to set expiration for projectiles so they dissappear eventually
-		if (Input.GetKey(KeyCode.M))
+		if (Input.GetKey(KeyCode.M) || Input.GetKey(KeyCode.Space))
         {
 			if (!buttonClicked) {
 				buttonClicked = true;
