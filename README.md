@@ -1,12 +1,13 @@
 # SCAPE_poc
 
 # in progress
-- add guns to car
-- add another car with even bigger tires
-
+- refactor terrain gen script
+- replace terrain cosine wave with animationcurve
 
 # todo
-- 
+- look into lod system
+- look into threading to prevent system lock
+- eventually replace diamond-square alg with perlin noise
 
 #done
 - add crosshair/cursor for mouse
