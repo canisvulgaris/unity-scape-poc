@@ -6,6 +6,9 @@
 
 # todo
 - look into lod system
+- fix projectile collision for high detail meshes
+- update projectile collision so it stores list of effected vertices and doesnt update them repeatedly
+- optmize projectile collision (currently takes major hit - threading could also help)
 - look into threading to prevent system lock
 - eventually replace diamond-square alg with perlin noise
 
