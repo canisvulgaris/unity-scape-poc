@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class vehicleController : MonoBehaviour
+public class trainController : MonoBehaviour
 {
     public List<AxleInfo> axleInfos; // the information about each individual axle
     public float maxMotorTorque; // maximum torque the motor can apply to wheel
