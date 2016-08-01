@@ -15,7 +15,6 @@ public class TerrainController : MonoBehaviour {
     public float _terrainMaxHeight = 0.0f;
     public float _terrainMinHeight = 0.0f;
 
-
     public int _gridExponential = 10;
     public float _terrainRoughness = 0.08F;
     public float _terrainAmplitude = 1.00F;
@@ -208,7 +207,7 @@ public class TerrainController : MonoBehaviour {
         CalcTerrainHeightMap();
         AddBorder();
 
-        SetTerrainHeightParameters();
+        //SetTerrainHeightParameters();
         _mainColors = new Color[_arrayLength * _arrayLength];
         _mainColors = GenerateColors(_arrayLength, _arrayLength);
         updateTerrainTexture();
@@ -689,6 +688,21 @@ public class TerrainController : MonoBehaviour {
     }
 
     /***************************************************************
+    * update global heights
+    * 
+    ****************************************************************/
+    void updateHeightParams(int x, int y)
+    {
+        float currHeight = _positionArray[x, y].y;
+        if (currHeight > _terrainMaxHeight) {
+            _terrainMaxHeight = currHeight;
+        }
+        else if (currHeight < _terrainMinHeight) {
+            _terrainMinHeight = currHeight;
+        }
+    }
+
+    /***************************************************************
     * Diamond Square Algorithim recursive function 
     * 
     ****************************************************************/
@@ -704,7 +718,9 @@ public class TerrainController : MonoBehaviour {
         float d4 = ((x - half) >= 0) ? _positionArray[(x - half), y].y : 0;
 
         float average = (d1 + d2 + d3 + d4) / 4;
+        
         _positionArray[x, y] = new Vector3(x, average + offsetValue, y);
+        updateHeightParams(x, y);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
@@ -725,6 +741,7 @@ public class TerrainController : MonoBehaviour {
 
         float average = (s1 + s2 + s3 + s4) / 4;
         _positionArray[x, y] = new Vector3(x, average + offsetValue, y);
+        updateHeightParams(x, y);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
