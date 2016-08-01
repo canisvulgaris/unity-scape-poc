@@ -680,9 +680,6 @@ public class TerrainController : MonoBehaviour {
 
         var offsetValue = offset * Mathf.Cos(_terrainWave * (x + _waveOffsetX)) * Mathf.Cos(_terrainWave * (y + _waveOffsetY));
         float roughness = _terrainRoughness;
-        var xRand = Random.value * roughness * 2 - roughness;
-        var yRand = Random.value * roughness * 2 - roughness;
-
 
         float d1 = (y - half) >= 0 ? _positionArray[x, (y - half)].y : 0;
         float d2 = (x + half) < full ? _positionArray[(x + half), y].y : 0;
@@ -690,7 +687,7 @@ public class TerrainController : MonoBehaviour {
         float d4 = ((x - half) >= 0) ? _positionArray[(x - half), y].y : 0;
 
         float average = (d1 + d2 + d3 + d4) / 4;
-        _positionArray[x, y] = new Vector3(x + xRand, average + offsetValue, y + yRand);
+        _positionArray[x, y] = new Vector3(x, average + offsetValue, y);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
@@ -702,10 +699,7 @@ public class TerrainController : MonoBehaviour {
         //Debug.Log ("square() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);
 
         var offsetValue = offset * Mathf.Cos(_terrainWave * x) * Mathf.Cos(_terrainWave * y);
-
         float roughness = _terrainRoughness;
-        var xRand = Random.value * roughness * 2 - roughness;
-        var yRand = Random.value * roughness * 2 - roughness;
 
         float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray[(x - half), (y - half)].y : 0;
         float s2 = ((y - half) >= 0 || (x + half) < full) ? _positionArray[(x + half), (y - half)].y : 0;
@@ -713,7 +707,7 @@ public class TerrainController : MonoBehaviour {
         float s4 = ((x - half) >= 0 || (y + half) < full) ? _positionArray[(x - half), (y + half)].y : 0;
 
         float average = (s1 + s2 + s3 + s4) / 4;
-        _positionArray[x, y] = new Vector3(x + xRand, average + offsetValue, y + yRand);
+        _positionArray[x, y] = new Vector3(x, average + offsetValue, y);
         //StartCoroutine(moveBlock (x, y, _positionArray [x, y], _count +=0.001F));
     }
 
