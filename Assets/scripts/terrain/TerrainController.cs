@@ -18,6 +18,7 @@ public class TerrainController : MonoBehaviour {
 
     public int _gridExponential = 10;
     public float _terrainRoughness = 0.08F;
+    public float _terrainAmplitude = 1.00F;
     public float _terrainWave = 0.1F;
     public float _objSize = 1;
     public int _meshLimit = 16;
@@ -270,6 +271,7 @@ public class TerrainController : MonoBehaviour {
 
         //create random terrain positions
         updatePositionUsingDiamondSquare();
+        updateTerrainAmplification();
         //normalizeBoundaries();
     }
 
@@ -474,6 +476,21 @@ public class TerrainController : MonoBehaviour {
             float avgY = (_positionArray[0, i].y + _positionArray[_arrayLength - 1, i].y) / 2;
             _positionArray[0, i].y = avgY;
             _positionArray[_arrayLength - 1, i].y = avgY;
+        }
+    }
+
+/***************************************************************
+* update the height of each point based on amplification param
+* 
+****************************************************************/
+    void updateTerrainAmplification()
+    {
+        for (int x = 0; x < _arrayLength; x++)
+        {
+            for (int y = 0; y < _arrayLength; y++)
+            {
+                _positionArray[x, y].y *= _terrainAmplitude;
+            }
         }
     }
 
@@ -698,7 +715,7 @@ public class TerrainController : MonoBehaviour {
     void square(int x, int y, int half, float offset, int full) {
         //Debug.Log ("square() params x: " + x + " y: " + y + " half: " + half + " offset: " + offset + " full: " + full);
 
-        var offsetValue = offset * Mathf.Cos(_terrainWave * x) * Mathf.Cos(_terrainWave * y);
+        var offsetValue = offset * Mathf.Sin(_terrainWave * x) * Mathf.Sin(_terrainWave * y);
         float roughness = _terrainRoughness;
 
         float s1 = ((x - half) >= 0 || (y - half) >= 0) ? _positionArray[(x - half), (y - half)].y : 0;
