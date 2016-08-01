@@ -636,16 +636,17 @@ public class TerrainController : MonoBehaviour {
         _positionArray[0, size] = new Vector3(0.0f, 0.0f, size);
         _positionArray[size, size] = new Vector3(size, 0.0f, size);
 
-        split(size, roughness, length);
+        split(size, length);
     }
 
     /***************************************************************
     * Diamond Square Algorithim recursive function 
     * 
     ****************************************************************/
-    void split(int size, float roughness, int full) {
+    void split(int size, int full) {
         //Debug.Log ("split() params size: " + size + " roughness: " + roughness + " full: " + full	);
         int half = size / 2;
+        float roughness = _terrainRoughness;
         //float scale = roughness * _blockSize;
         float scale = roughness * size;
 
@@ -667,7 +668,7 @@ public class TerrainController : MonoBehaviour {
             }
         }
 
-        split(half, roughness, full);
+        split(half, full);
     }
 
     /***************************************************************
