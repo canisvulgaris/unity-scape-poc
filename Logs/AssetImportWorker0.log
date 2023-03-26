@@ -1,0 +1,327 @@
+Unity Editor version:    2022.2.12f1 (022dac4955a3)
+Branch:                  2022.2/staging
+Build type:              Release
+Batch mode:              YES
+macOS version:           Version 13.2.1 (Build 22D68)
+Darwin version:          22.3.0
+Architecture:            arm64
+Running under Rosetta:   NO
+Available memory:        16384 MB
+Using pre-set license
+Pro License: YES
+
+COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/2022.2.12f1/Unity.app/Contents/MacOS/Unity
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+/Users/nauman/Work/github/me/unity-scape-poc
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+64417
+Successfully changed project path to: /Users/nauman/Work/github/me/unity-scape-poc
+/Users/nauman/Work/github/me/unity-scape-poc
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [8284717376] Host "[IP] 192.168.86.221 [Port] 0 [Flags] 2 [Guid] 537833899 [EditorId] 537833899 [Version] 1048832 [Id] OSXEditor(0,MBP-Nauman.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+
+Player connection [8284717376] Host "[IP] 192.168.86.221 [Port] 0 [Flags] 2 [Guid] 537833899 [EditorId] 537833899 [Version] 1048832 [Id] OSXEditor(0,MBP-Nauman.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Refreshing native plugins compatible for Editor in 16.14 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2022.2.12f1 (022dac4955a3)
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2022.2.12f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/nauman/Work/github/me/unity-scape-poc/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+ preferred device: Apple M1 Pro (high power)
+Metal devices available: 1
+0: Apple M1 Pro (high power)
+Using device Apple M1 Pro (high power)
+Initializing Metal device caps: Apple M1 Pro
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/2022.2.12f1/Unity.app/Contents/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/2022.2.12f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit-macos'
+Mono config path = '/Applications/Unity/Hub/Editor/2022.2.12f1/Unity.app/Contents/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56047
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/2022.2.12f1/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: /Applications/Unity/Hub/Editor/2022.2.12f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Registered in 0.003812 seconds.
+- Loaded All Assemblies, in  0.233 seconds
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.157 seconds
+Domain Reload Profiling:
+	ReloadAssembly (145ms)
+		BeginReloadAssembly (78ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		LoadAllAssembliesAndSetupDomain (0ms)
+			LoadAssemblies (78ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (86ms)
+				TypeCache.Initialize (85ms)
+					TypeCache.ScanAssembly (84ms)
+				ResolveRequiredComponents (0ms)
+		FinalizeReload (0ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (0ms)
+			SetupLoadedEditorAssemblies (120ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (5ms)
+				SetLoadedEditorAssemblies (3ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (1ms)
+				ProcessInitializeOnLoadAttributes (85ms)
+				ProcessInitializeOnLoadMethodAttributes (26ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+========================================================================
+Worker process is ready to serve import requests
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.468 seconds
+Refreshing native plugins compatible for Editor in 3.09 ms, found 2 plugins.
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Failed while parsing XML file ProjectSettings/GvhProjectSettings.xml
+System.Xml.XmlException: Root element is missing.
+  at System.Xml.XmlTextReaderImpl.Throw (System.Exception e) [0x00027] in <6dd8b55afe014ee587d570200dfad118>:0 
+  at System.Xml.XmlTextReaderImpl.ThrowWithoutLineInfo (System.String res) [0x00017] in <6dd8b55afe014ee587d570200dfad118>:0 
+  at System.Xml.XmlTextReaderImpl.ParseDocumentContent () [0x0035d] in <6dd8b55afe014ee587d570200dfad118>:0 
+  at System.Xml.XmlTextReaderImpl.Read () [0x0008c] in <6dd8b55afe014ee587d570200dfad118>:0 
+  at System.Xml.XmlTextReader.Read () [0x00000] in <6dd8b55afe014ee587d570200dfad118>:0 
+  at Google.XmlUtilities+Reader..ctor (System.Xml.XmlTextReader xmlReader) [0x0001d] in <ac8e755fbc27434ebdaf117e2c7041d9>:0 
+  at Google.XmlUtilities.ParseXmlTextFileElements (System.String filename, Google.Logger logger, Google.XmlUtilities+ParseElement parseElement) [0x00043] in <ac8e755fbc27434ebdaf117e2c7041d9>:0 
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:37)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+Google.Logger:Log (string,Google.LogLevel)
+Google.XmlUtilities:ParseXmlTextFileElements (string,Google.Logger,Google.XmlUtilities/ParseElement)
+Google.ProjectSettings:Load ()
+Google.ProjectSettings:LoadIfEmpty ()
+Google.ProjectSettings:GetBool (string,bool,Google.SettingsLocation)
+Google.ProjectSettings:GetBool (string,bool)
+GooglePlayServices.SettingsDialog:get_VerboseLogging ()
+GooglePlayServices.PlayServicesResolver:OnSettingsChanged ()
+GooglePlayServices.PlayServicesResolver:.cctor ()
+System.Runtime.CompilerServices.RuntimeHelpers:RunClassConstructor (System.RuntimeTypeHandle)
+UnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.Type[]) (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorAssemblies.cs:145)
+
+(Filename: /Users/bokken/build/output/unity/unity/Editor/Mono/EditorAssemblies.cs Line: 145)
+
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.617 seconds
+Domain Reload Profiling:
+	ReloadAssembly (121ms)
+		BeginReloadAssembly (68ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (3ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (17ms)
+		LoadAllAssembliesAndSetupDomain (348ms)
+			LoadAssemblies (221ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (150ms)
+				TypeCache.Initialize (139ms)
+					TypeCache.ScanAssembly (137ms)
+				ResolveRequiredComponents (2ms)
+		FinalizeReload (0ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (0ms)
+			SetupLoadedEditorAssemblies (524ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (3ms)
+				SetLoadedEditorAssemblies (3ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (31ms)
+				ProcessInitializeOnLoadAttributes (371ms)
+				ProcessInitializeOnLoadMethodAttributes (115ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (3ms)
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Cannot set VR devices because the platform passed isn't supported by Unity.
+Launching external process: /Applications/Unity/Hub/Editor/2022.2.12f1/Unity.app/Contents/Tools/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.05 seconds
+Refreshing native plugins compatible for Editor in 2.75 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2468 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 73 unused Assets / (70.1 KB). Loaded Objects now: 2910.
+Memory consumption went from 101.6 MB to 101.6 MB.
+Total: 5.518709 ms (FindLiveObjects: 0.103667 ms CreateObjectMapping: 0.029583 ms MarkObjects: 5.237916 ms  DeleteObjects: 0.146458 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:scripting/monoscript/fileName/EnumUtilities.cs: 5a21a105f58880df6c87f84e99142f1e -> 
+  custom:scripting/monoscript/fileName/INativeBanner.cs: f02486938cf8a3fab600d2aa93479dc5 -> 
+  custom:scripting/monoscript/fileName/AssemblyInfoUtilities.cs: cfb54d5f8c64068dbe110183f4c779cf -> 
+  custom:scripting/monoscript/fileName/IPlatform.cs: 7797606926422d17a325876f68b039f5 -> 
+  custom:scripting/monoscript/fileName/UiUtils.cs: 92a38366a2a31d6040f0b68e2f09cfff -> 
+  custom:scripting/monoscript/fileName/AndroidInitializationListener.cs: 0a66013131439da8021bc2252fd2fb9d -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:scripting/monoscript/fileName/UnsupportedPlatform.cs: 70647992ba3772ae90af74a2f80bfe61 -> 
+  custom:AudioImporter_EditorPlatform: 3918e3fc78b5a79bad01e8451be0beb8 -> 
+  custom:scripting/monoscript/fileName/MetaData.cs: fcc2240d7f5939e317ba5f73924a62b0 -> 
+  custom:scripting/monoscript/fileName/SkAdNetworkJsonParser.cs: 2e9a76db394ac72bcb5c1cb07b5a3eb5 -> 
+  custom:scripting/monoscript/fileName/Advertisement.cs: 1aaf8094c25f08d67034b74a01cbe2c4 -> 
+  custom:scripting/monoscript/fileName/Banner.cs: 3e272af97a50c7297b83c105075660c2 -> 
+  custom:scripting/monoscript/fileName/MiniJSON.cs: 9dd9bd3ab85495126c7877887d3a0b4e -> 9a756635ba857311c4cad4daf90aa118
+  custom:scripting/monoscript/fileName/UnityAdsShowListenerMainDispatch.cs: 1e941d5a53efb3e56adb8cf815abf8d2 -> 
+  custom:scripting/monoscript/fileName/FinishEventArgs.cs: 9c3653493570649906809987784b185d -> 
+  custom:scripting/monoscript/fileName/IBanner.cs: a4dd9caf870f19a68f872dad8602e5bd -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:scripting/monoscript/fileName/ShowOptions.cs: 907853a0b23687a252768e983401a2b4 -> 
+  custom:scripting/monoscript/fileName/SkAdNetworkXmlParser.cs: c4d791522d8060bb36e3ca53a1e3c472 -> 
+  custom:scripting/monoscript/fileName/SkAdNetworkLocalSourceProvider.cs: cf168d41ae0339006b9d3e85924e1e18 -> 
+  custom:scripting/monoscript/fileName/Placeholder.cs: dc7dc49fb88e9c6a01026b714c085c4e -> 
+  custom:scripting/monoscript/fileName/ISkAdNetworkParser.cs: 00a2f1799285403c715675afc483a338 -> 
+  custom:scripting/monoscript/fileName/StartEventArgs.cs: 488334481efcd4238c3d93437d51344f -> 
+  custom:scripting/monoscript/fileName/IUnityLifecycleManager.cs: dc09e18ba7720d75ad974331d1cc46bb -> 
+  custom:scripting/monoscript/fileName/GameIdsUi.cs: 7f9de94899f7caa856844cd5dd6bebbb -> 
+  custom:scripting/monoscript/fileName/BannerPlaceholder.cs: 47bbd045968b4accb04a83cb1c004944 -> 
+  custom:scripting/monoscript/fileName/PluginUtils.cs: 622cad900c32a75eb031e24b63abb3d9 -> 
+  custom:scripting/monoscript/fileName/BannerOptions.cs: b20fb271839b57a288ec71ce73eb696b -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:scripting/monoscript/fileName/SkAdNetworkRemoteSource.cs: 4ce6c78ada45cdbd9845161fe5b527d6 -> 
+  custom:scripting/monoscript/fileName/AdsServiceEnabler.cs: 302965511998f922cc7771b61e27c203 -> 
+  custom:scripting/monoscript/fileName/AdsSettingsProvider.cs: a37b7e055955eb28e22d58c92545d483 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:scripting/monoscript/fileName/AdsServiceIdentifier.cs: a0c2b0ec1b0e22d4822c4f9daff3c51d -> 
+  custom:scripting/monoscript/fileName/GettingStartedUi.cs: df3891749d02f246e39cc01e02e45428 -> 
+  custom:scripting/monoscript/fileName/Color.cs: 052bd00c2f811370ae18ff5c84d60ae7 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:scripting/monoscript/fileName/AdsService.cs: a80fe44f6bb90ae25095abab21494c0c -> 
+  custom:scripting/monoscript/fileName/AdsDashboardUrls.cs: 639222f61a8da5d8eabec0179d12155f -> 
+  custom:scripting/monoscript/fileName/BannerLoadOptions.cs: 5ef109474c2f91ce9db9f6dca15b8a50 -> 
+  custom:scripting/monoscript/fileName/UnityAdsInitializationListenerMainDispatch.cs: 114773e7dc48b88138ce9f5404f3c39c -> 
+  custom:scripting/monoscript/fileName/AndroidLoadListener.cs: f9da6dba1ab0cee865b8bfe528cfa243 -> 
+  custom:scripting/monoscript/fileName/IUnityAdsShowListener.cs: cf15f2e00edeff86a072dc96142e6ae8 -> 
+  custom:scripting/monoscript/fileName/UnityLifecycleManager.cs: 778ea64b784342f7bc6183d9ebd03d04 -> 
+  custom:scripting/monoscript/fileName/IUnityAdsLoadListener.cs: 50e8b68160e2f2538886aa4b7b61a0f8 -> 
+  custom:scripting/monoscript/fileName/RequestGameIds.cs: 1770056b730c30e9eb20371967cc7d54 -> 
+  custom:scripting/monoscript/fileName/Configuration.cs: cc24c747281f83544d6532b3b619e82e -> 
+  custom:scripting/monoscript/fileName/AdsLegacyToMediationPopup.cs: 5f7f0ffc6f9fd389bdc0a71db01a99a4 -> 
+  custom:scripting/monoscript/fileName/SkAdNetworkUrlParser.cs: d0c2ddc879b9c58053ead5206b8fd2ee -> 
+  custom:scripting/monoscript/fileName/SkAdNetworkParser.cs: 63ea983e03422b5744f7d5ef87e509db -> 
+  custom:scripting/monoscript/fileName/Platform.cs: da80c80ab243bb84b0ec9b692f173112 -> 
+  custom:scripting/monoscript/fileName/SkAdNetworkLocalSource.cs: 24e2e363b7d610ab03d61705aa54cdc1 -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:scripting/monoscript/fileName/EditorTimer.cs: 481d241555bb2caea52276bc80c44dd0 -> 
+  custom:scripting/monoscript/fileName/EditorBanner.cs: da89a45a10ffa6b32542b8936dea6fa7 -> 
+  custom:scripting/monoscript/fileName/AndroidShowListener.cs: 68f60435133353c463fd4ba8612cd1d3 -> 
+  custom:scripting/monoscript/fileName/BannerBundle.cs: c2862d54b4d7ad6a7c329caf69f74522 -> 
+  custom:scripting/monoscript/fileName/INativePlatform.cs: 5877a011f50d2e3fb2124ddc38d59367 -> 
+  custom:scripting/monoscript/fileName/UiConstants.cs: d033ded79bf016572865d25f033a7fc7 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:scripting/monoscript/fileName/AdsServiceTopMenu.cs: 4259d1e69413eee1dc15f63471a1123f -> 
+  custom:scripting/monoscript/fileName/EditorPlatform.cs: ebfc104a013cfcf421039da869bd9a12 -> 
+  custom:scripting/monoscript/fileName/IUnityAdsInitializationListener.cs: f10a0c5171fd22d7c1e94f51b88aef68 -> 
+  custom:scripting/monoscript/fileName/ApplicationQuit.cs: 693ef360f7cfde012ac34e2d78cc00f0 -> 
+  custom:scripting/monoscript/fileName/CoroutineExecutor.cs: 81b7e05520d351a5d800b16cdb1a8670 -> 
+  custom:scripting/monoscript/fileName/EditorGameServiceAnalyticsSender.cs: 7d3647bed1aa704685b5f6bdac30c970 -> 8bf60872ac2cc5d469b63c20e25f0d58
+  custom:scripting/monoscript/fileName/SkAdNetworkFileExtension.cs: ce0d5a10118b6d2ddbd380ff99aa16e0 -> 
+  custom:scripting/monoscript/fileName/UnityAdsLoadListenerMainDispatch.cs: 31f1282b5052137ed3fa7eabb52b9550 -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:scripting/monoscript/fileName/UnsupportedBanner.cs: 94092f492f62a479f89db73a4d75dfe6 -> 
+  custom:scripting/monoscript/fileName/ISkAdNetworkSource.cs: 2edbde09d15b4fc45971df135bdab360 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 10920.266680 seconds.
+  path: Assets/textures/circle.png
+  artifactKey: Guid(a4161c294a503854b80b024cda687956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/textures/circle.png using Guid(a4161c294a503854b80b024cda687956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9d1bae08271fec310fffbba0e6abbb0d') in 0.098955 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000116 seconds.
+  path: Assets/textures/tex-grass2-normal.png
+  artifactKey: Guid(733a1e975a7430641b0b51dfcc19c5b7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/textures/tex-grass2-normal.png using Guid(733a1e975a7430641b0b51dfcc19c5b7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c60f2cf5ba35af4707fb714080205069') in 0.064817 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000097 seconds.
+  path: Assets/textures/tex-grass5.jpg
+  artifactKey: Guid(eb134f0055e878b47a7c6b31dcd99baf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/textures/tex-grass5.jpg using Guid(eb134f0055e878b47a7c6b31dcd99baf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a004c4338531752f139bbc0898f7eec9') in 0.004949 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000179 seconds.
+  path: Assets/textures/wheel-x-2.png
+  artifactKey: Guid(1c7791a914821784e9e4186386888ff3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/textures/wheel-x-2.png using Guid(1c7791a914821784e9e4186386888ff3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ce4570c1fe04f8ca9df8b216d6c6869b') in 0.003029 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 10.405051 seconds.
+  path: Assets/scripts/gui/guiHelpBtn.cs
+  artifactKey: Guid(2e25fd334e9498b4586f6c5ee1c93ba7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/scripts/gui/guiHelpBtn.cs using Guid(2e25fd334e9498b4586f6c5ee1c93ba7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9e95e2e64bf631835186b3a5fc7e2916') in 0.000501 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0
